@@ -1,0 +1,76 @@
+
+---------------
+      api
+---------------
+src>api>routes/index.js: This file initializes an Express.js router, creates 
+                  database collections, and defines corresponding API endpoints for retrieving information. It ensures proper database setup before defining routes and exports the configured router to be improted from connectDB.js or from the mongodb execution funciton. 
+
+                  How will you call asynchronous funciton in response to api reqest?
+                  :router.get("/tasks", async(req,res)=> await getAllTasks(req,res,tasksCollection))
+                  :here getAllTasks() funciton is given arguments req,res,collection name to return necessary data
+
+---------------
+config
+---------------
+          Ensure any confifuration if needed. like different environment confifuration like: develpment, testing , production and so on. 
+
+config/swagger:write all your defined routes endpoints details in config/swagger 
+          file for other developers understand their purpose effortlessly.  
+
+
+---------------
+  controller
+---------------
+src > api > controller
+tasks || users.. 
+Controller folder: Manages asynchronous operations when an API is called.
+          Example: When a user hits the URL "http://localhost:5000/user," the request goes through allRoutes to the controller, specifically the "users" folder and its "index.js" file.
+          Example 2: Defines the asynchronous execution function body for an endpoint like "/user," maintaining a clean and modular environment.
+
+
+---------------
+      DB
+---------------
+connectDB.js: This file establishes a connection with MongoDB, incorporates defined 
+              routes into the Express.js application,`
+
+createDB.js : This file provides a function
+              to create a MongoDB database and collection
+
+createMongoClient.js: This file creates a MongoDB client
+                      for establishing a connection
+
+---------------
+errorHandling
+---------------
+Global error hadling   app.all("*",{..}) 
+        :if no route matches this route will be hit 
+        : will create an error and pass it to the next 
+        : The Next funciton takes 4 parameter (err,req,res,next) and accordingly will 
+          catch it and respond the error was occured
+
+---------------
+  Middleware
+---------------
+src>Middleware: Middleware: all the Middleware like cors,verifyToken,cookieparser
+
+
+---------------
+  utils
+---------------
+src > utils:This folder typically contains small, reusable functions or modules 
+             that provide commonly used functionality across different parts of the codebase. 
+
+
+---------------
+  tests
+---------------
+             You can use this file to test any code logic before applying it to the actual app's featuers. 
+
+---------------
+  .env file
+---------------
+            entralizes configuration the sensative information to access from different parts of application and secure vital/not sharable info. 
+
+            mongodbLocalUri = "mongodb://0.0.0.0:27017"
+            mongodbCloudUri = "mongodb+srv://<username>:<password>@cluster0.sk8jxpx.mongodb.net/?retryWrites=true&w=majority" 
