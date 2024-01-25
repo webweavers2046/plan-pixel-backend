@@ -2,7 +2,7 @@
 
 const { ObjectId } = require("mongodb");
 
-// get all the tasks
+// Get all the tsaks
 const getAllTasks = async (req, res, tasksCollection) => {
   try {
     const tasks = await tasksCollection.find().toArray();
@@ -14,7 +14,7 @@ const getAllTasks = async (req, res, tasksCollection) => {
 
 // Get signle task by id
 const getSingleTask = async (req, res, tasksCollection) => {
-  const id = req.params.id
+  const id = req.params.id;
   try {
     const task = await tasksCollection.findOne({
       _id: new ObjectId(id),
@@ -24,6 +24,12 @@ const getSingleTask = async (req, res, tasksCollection) => {
     res.status(500).send("Internal Server Error");
   }
 };
+
+
+
+
+
+
 
 module.exports = {
   getAllTasks,

@@ -1,4 +1,4 @@
-const setupGlobalErrorHandling = (app) => {
+const setupGlobalErrorHandling = async(app) => {
       // This will ensure the app will never crash
       // it is global error handling if no route matches or any internal issue happens
       // this middleware will execute

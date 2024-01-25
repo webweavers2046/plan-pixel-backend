@@ -1,0 +1,28 @@
+[
+      {
+        "userId": 1,
+        "username": "john_doe",
+        "email": "john.doe@email.com"
+      },
+      {
+        "userId": 2,
+        "username": "jane_smith",
+        "email": "jane.smith@email.com"
+      },
+      {
+        "userId": 3,
+        "username": "alex_jackson",
+        "email": "alex.jackson@email.com"
+      },
+      {
+        "userId": 4,
+        "username": "sara_miller",
+        "email": "sara.miller@email.com"
+      },
+      {
+        "userId": 5,
+        "username": "mike_roberts",
+        "email": "mike.roberts@email.com"
+      }
+    ]
+    

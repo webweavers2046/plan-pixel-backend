@@ -5,12 +5,12 @@
 
 const createMongoClient = require("./CreateMongoClient");
 
-const createDB = async ( databaseName, collectionName) => {
+const createDB = async (collectionName) => {
       const client = createMongoClient()
       
   try {
     await client.connect();
-    const collection = client.db(databaseName).collection(collectionName);
+    const collection = client.db("planPixelDB").collection(collectionName);
     // return dababase collection
     return collection;
   } catch (error) {

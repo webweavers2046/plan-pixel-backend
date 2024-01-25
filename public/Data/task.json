@@ -1,0 +1,103 @@
+[
+  {
+    "taskId": 1,
+    "title": "Identify your target audience",
+    "description": "Conduct research and identify the target audience for the project.",
+    "tags": ["research", "target audience", "planning"],
+    "dates": {
+      "startDate": "Apr 08",
+      "dueDate": "Apr 21"
+    },
+    "status": "In Progress",
+    "priority": "High",
+    "toDoList": [
+      {
+        "task": "Identify your target audience",
+        "status": "done"
+      },
+      {
+        "task": "Conduct research",
+        "status": "done"
+      },
+      {
+        "task": "Respond to urgent emails",
+        "status": "done"
+      },
+      {
+        "task": "Make a grocery list",
+        "status": "pending"
+      },
+      {
+        "task": "Set a 10-minute stretch break",
+        "status": "pending"
+      }
+    ],
+    "contributors": ["User1", "User2"],
+    "comments": [
+      {"contributor": "User1", "comment": "I can help with the research part."},
+      {"contributor": "User2", "comment": "I'll take care of responding to urgent emails."}
+    ]
+  },
+  {
+    "taskId": 2,
+    "title": "Your Second Task",
+    "description": "Description of the second task.",
+    "tags": ["tag1", "tag2"],
+    "dates": {
+      "startDate": "Date2",
+      "dueDate": "DueDate2"
+    },
+    "status": "Completed",
+    "priority": "Medium",
+    "toDoList": [
+      {
+        "task": "Task 1",
+        "status": "done"
+      },
+      {
+        "task": "Task 2",
+        "status": "done"
+      },
+      {
+        "task": "Task 3",
+        "status": "pending"
+      }
+    ],
+    "contributors": ["User3", "User4"],
+    "comments": [
+      {"contributor": "User3", "comment": "A comment from User3."},
+      {"contributor": "User4", "comment": "A comment from User4."}
+    ]
+  },
+  {
+    "taskId": 3,
+    "title": "Your Third Task",
+    "description": "Description of the third task.",
+    "tags": ["tag3", "tag4"],
+    "dates": {
+      "startDate": "Date3",
+      "dueDate": "DueDate3"
+    },
+    "status": "Pending",
+    "priority": "Low",
+    "toDoList": [
+      {
+        "task": "Task A",
+        "status": "pending"
+      },
+      {
+        "task": "Task B",
+        "status": "pending"
+      },
+      {
+        "task": "Task C",
+        "status": "pending"
+      }
+    ],
+    "contributors": ["User5", "User6"],
+    "comments": [
+      {"contributor": "User5", "comment": "A comment from User5."},
+      {"contributor": "User6", "comment": "A comment from User6."}
+    ]
+  }
+]

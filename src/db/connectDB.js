@@ -19,7 +19,7 @@ const connectDB = async (app, port) => {
     console.error("Error connecting to MongoDB:", error);
   } finally {
     // Global error handling 
-    setupGlobalErrorHandling(app);
+    await setupGlobalErrorHandling(app);
 
     // listen the app
     app.listen(port, () => {
