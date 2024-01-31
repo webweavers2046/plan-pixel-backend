@@ -33,6 +33,9 @@ const initializeRoutes = async () => {
     router.post("/create-payment-intent",async (req, res) => await PaymentIntend(req, res));
     
     // confirmation log
+    router.get("/",(req,res)=>{
+      res.send('plan pixel successfully connected')
+    })
     console.log("Routes initialized successfully");
   } catch (error) {
     console.error("Error initializing routes:", error);
