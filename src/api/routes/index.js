@@ -1,4 +1,3 @@
-const express = require("express");
 const createDB = require("../../db/createDB");
 const {
   getAllTasks,
@@ -8,7 +7,10 @@ const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
 const updateTaskState = require("../controllers/tasks/updateTask");
 const { PaymentIntend } = require("../controllers/payment/payments");
+const express = require('express')
 const router = express.Router();
+
+
 
 // Define the route initialization function
 const initializeRoutes = async () => {
@@ -30,6 +32,7 @@ const initializeRoutes = async () => {
    // payment relate api
     router.post("/create-payment-intent",async (req, res) => await PaymentIntend(req, res));
     
+    // confirmation log
     console.log("Routes initialized successfully");
   } catch (error) {
     console.error("Error initializing routes:", error);

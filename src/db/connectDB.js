@@ -5,12 +5,13 @@ const createMongoClient = require("./CreateMongoClient");
 const allRoutes = require("../api/routes/index");
 
 const connectDB = async (app, port) => {
+
   // Required client for the connection
   const client = createMongoClient();
 
   try {
-    await client.connect();
 
+    await client.connect();
     // Here you define all of your routes
     app.use(allRoutes);
 
