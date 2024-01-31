@@ -1,10 +1,12 @@
-const express = require("express");
 const createDB = require("../../db/createDB");
 const { getAllTasks, getSingleTask } = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
 const updateTaskState = require("../controllers/tasks/updateTask");
+const express = require('express')
 const router = express.Router();
+
+
 
 // Define the route initialization function
 const initializeRoutes = async () => {
@@ -19,6 +21,7 @@ const initializeRoutes = async () => {
     router.put("/updateTask/:id", async (req, res) => await updateTask(req, res, tasksCollection));
     router.patch("/updateTaskState", async (req, res) => await updateTaskState(req, res, tasksCollection));
     
+    // confirmation log
     console.log("Routes initialized successfully");
 
   } catch (error) {
