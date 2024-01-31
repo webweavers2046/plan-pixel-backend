@@ -28,12 +28,12 @@ const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const calculateOrderAmount = (items) => {
   let amount = 0;
-  if (planName === "basic") {
-    amount = 12;
-  } else if (planName === "enterprise") {
-    amount = 30;
-  } else if (planName === "pro") {
-    amount = 23;
+  if (items === "basic") {
+    amount = 100 * 12;
+  } else if (items === "enterprise") {
+    amount = 10 * 30;
+  } else if (items === "pro") {
+    amount = 100 * 23;
   }
   return amount;
 };
