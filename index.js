@@ -6,6 +6,7 @@ const applyMiddleWare = require("./src/middlewares/applyMiddleware");
 const connectDB = require("./src/db/connectDB");
 const port = process.env.PORT || 5000;
 
+
 applyMiddleWare(app);
 
 app.get("/", (req, res) => {
