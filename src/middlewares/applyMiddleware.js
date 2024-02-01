@@ -20,4 +20,5 @@ const applyMiddleWare = (app) => {
   app.use(cookieParser());
 };
 
+
 module.exports = applyMiddleWare;
