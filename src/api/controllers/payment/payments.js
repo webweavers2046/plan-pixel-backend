@@ -1,27 +1,3 @@
-// // This file is about creating task in the database
-// const stripe = require("stripe")(`${process.env.STRIPE_SECRET_KEY}`);
-
-// const PaymentIntend = async (req, res) => {
-//   try {
-//     const { packageCost } = req.body;
-//     console.log(packageCost);
-//     const amount = parseInt(packageCost * 100);
-//     const paymentIntent = await stripe.paymentIntents.create({
-//       amount: amount,
-//       currency: "usd",
-//       payment_method_types: ["card"],
-//     });
-
-//     // console.log(paymentIntent);
-//     res.send({ clientSecret: paymentIntent.client_secret });
-//   } catch (error) {
-//     console.log(error);
-//   }
-// };
-
-// module.exports = {
-// PaymentIntend,
-// };
 
 // This is your test secret API key.
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
@@ -51,7 +27,6 @@ const PaymentIntend = async (req, res) => {
     // },
     payment_method_types: ["card"],
   });
-
   res.send({
     clientSecret: paymentIntent.client_secret,
   });
