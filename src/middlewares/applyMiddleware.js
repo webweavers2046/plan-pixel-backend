@@ -1,4 +1,3 @@
-
 const cors = require('cors');
 const express = require("express");
 const cookieParser = require("cookie-parser");
@@ -7,7 +6,7 @@ const applyMiddleWare = (app) => {
   // Middleware 
   app.use(cors({
     origin: "http://localhost:3000",
-    methods: "GET, PATCH",
+    methods: ["GET", "PATCH"],
     credentials: true,
     optionsSuccessStatus: 204,
   }));
