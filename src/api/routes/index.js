@@ -7,7 +7,9 @@ const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
 const updateTaskState = require("../controllers/tasks/updateTask");
 const { PaymentIntend } = require("../controllers/payment/payments");
-const express = require('express')
+const express = require('express');
+const { CreateUser } = require("../controllers/users/CreateUser");
+const { getAllUsers, updateUser } = require("../controllers/users");
 const router = express.Router();
 
 
@@ -27,7 +29,9 @@ const initializeRoutes = async () => {
 
 
     // user related api
+    router.get("/users",async (req, res) => await getAllUsers(req, res, usersCollection));
     router.post("/users",async (req, res) => await CreateUser(req, res, usersCollection));
+    router.put("/users/:email",async (req, res) => await updateUser(req, res, usersCollection));
 
    // payment relate api
     router.post("/create-payment-intent",async (req, res) => await PaymentIntend(req, res));

@@ -6,7 +6,7 @@ const applyMiddleWare = (app) => {
   // Middleware 
   app.use(cors({
     origin: "http://localhost:3000",
-    methods: ["GET", "PATCH"],
+    methods: ["GET","PATCH","PUT"],
     credentials: true,
     optionsSuccessStatus: 204,
   }));

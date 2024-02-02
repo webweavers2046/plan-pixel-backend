@@ -37,7 +37,6 @@ client.connect().then(() => {
   // Socket.IO logic
   io.on("connection", (socket) => {
     console.log("A user connected");
-
     // Load documents from MongoDB and emit to the client
     tasksCollection.find().toArray().then((tasks) => {
       socket.emit("tasks", tasks);
