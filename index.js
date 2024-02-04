@@ -7,9 +7,8 @@ const createMongoClient = require("./src/db/CreateMongoClient");
 require("dotenv").config();
 const cors = require("cors");
 const port = process.env.PORT || 5000;
-
-// Middleware
 const app = express();
+
 applyMiddleWare(app);
 
 // socket.io server cors policy resolution
