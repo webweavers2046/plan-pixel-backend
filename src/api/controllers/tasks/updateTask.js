@@ -32,6 +32,7 @@ const updateTask = async (req, res, taskCollection) => {
 const updateTaskState = async (req, res, taskCollection) => {
   try {
     const { id, state } = req.query
+    console.log(id,state);
     // // Making sure sent id is valid
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid taskId format' });
@@ -45,6 +46,7 @@ const updateTaskState = async (req, res, taskCollection) => {
 
     // Updating the task in the MongoDB collection
     const updated = await taskCollection.updateOne(filter, update);
+    console.log(update);
     const updatedTasks = await taskCollection.find().toArray()
     res.send({ updated, state, updatedTasks })
   } catch (error) {
