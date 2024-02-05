@@ -12,14 +12,18 @@ const { PaymentIntend } = require("../controllers/payment/payments");
 const express = require("express");
 const { CreateUser } = require("../controllers/users/CreateUser");
 const { getAllUsers, updateUser } = require("../controllers/users");
+const createWorkspace = require("../controllers/workspace");
+const workspaces = require("../controllers/workspace/read-workspaces");
+const getWorkspaceTask = require("../controllers/workspace/read-tasks");
 const router = express.Router();
 
 // Define the route initialization function
 const initializeRoutes = async () => {
   try {
     // Create database collections
-    const tasksCollection = await createDB("tasks");
-    const usersCollection = await createDB("users");
+    const tasks = await createDB("tasks");
+    const users = await createDB("users");
+    const workspace = await createDB("workspace");
 
     // Task related APIs
     router.get(
