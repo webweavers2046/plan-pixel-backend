@@ -2,17 +2,17 @@ const createDB = require("../../db/createDB");
 const {
   getAllTasks,
   getSingleTask,
+  geTaskByStats,
 } = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
 const updateTaskState = require("../controllers/tasks/updateTask");
 const deleteTask = require("../controllers/tasks/deleteTask");
 const { PaymentIntend } = require("../controllers/payment/payments");
-const express = require('express');
+const express = require("express");
 const { CreateUser } = require("../controllers/users/CreateUser");
 const { getAllUsers, updateUser } = require("../controllers/users");
 const router = express.Router();
-
 
 // Define the route initialization function
 const initializeRoutes = async () => {
@@ -26,6 +26,11 @@ const initializeRoutes = async () => {
       "/tasks",
       async (req, res) => await getAllTasks(req, res, tasksCollection)
     );
+    router.get(
+      "/tasks/:stats",
+      async (req, res) => await geTaskByStats(req, res, tasksCollection)
+    );
+
     router.post(
       "/createTask",
       async (req, res) => await CreateTask(req, res, tasksCollection)
@@ -46,9 +51,18 @@ const initializeRoutes = async () => {
     );
 
     // user related api
-    router.get("/users",async (req, res) => await getAllUsers(req, res, usersCollection));
-    router.post("/users",async (req, res) => await CreateUser(req, res, usersCollection));
-    router.put("/users/:email",async (req, res) => await updateUser(req, res, usersCollection));
+    router.get(
+      "/users",
+      async (req, res) => await getAllUsers(req, res, usersCollection)
+    );
+    router.post(
+      "/users",
+      async (req, res) => await CreateUser(req, res, usersCollection)
+    );
+    router.put(
+      "/users/:email",
+      async (req, res) => await updateUser(req, res, usersCollection)
+    );
     router.post(
       "/users",
       async (req, res) => await CreateUser(req, res, usersCollection)
