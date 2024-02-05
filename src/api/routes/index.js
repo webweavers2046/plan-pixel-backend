@@ -8,7 +8,7 @@ const updateTask = require("../controllers/tasks/updateTask");
 const updateTaskState = require("../controllers/tasks/updateTask");
 const deleteTask = require("../controllers/tasks/deleteTask");
 const { PaymentIntend } = require("../controllers/payment/payments");
-const express = require('express');
+const express = require("express");
 const { CreateUser } = require("../controllers/users/CreateUser");
 const { getAllUsers, updateUser } = require("../controllers/users");
 const router = express.Router();
@@ -22,42 +22,22 @@ const initializeRoutes = async () => {
 
     // Task related APIs
     router.get(
-      "/tasks",
-      async (req, res) => await getAllTasks(req, res, tasksCollection)
-    );
-    router.post(
-      "/createTask",
-      async (req, res) => await CreateTask(req, res, tasksCollection)
-    );
-    router.put(
-      "/updateTask/:id",
-      async (req, res) => await updateTask(req, res, tasksCollection)
-    );
-    router.patch(
-      "/updateTaskState",
-      async (req, res) => await updateTaskState(req, res, tasksCollection)
-    );
+      "/tasks",async (req, res) => await getAllTasks(req, res, tasksCollection));
+    router.post("/createTask",async (req, res) => await CreateTask(req, res, tasksCollection));
+    router.put("/updateTask/:id",async (req, res) => await updateTask(req, res, tasksCollection));
+    router.patch("/updateTaskState",async (req, res) => await updateTaskState(req, res, tasksCollection));
 
     //Delete (task)
-    router.delete(
-      "/deleteTask/:id",
-      async (req, res) => await deleteTask(req, res, tasksCollection)
-    );
+    router.delete("/deleteTask/:id",async (req, res) => await deleteTask(req, res, tasksCollection));
 
     // user related api
     router.get("/users",async (req, res) => await getAllUsers(req, res, usersCollection));
     router.post("/users",async (req, res) => await CreateUser(req, res, usersCollection));
     router.put("/users/:email",async (req, res) => await updateUser(req, res, usersCollection));
-    router.post(
-      "/users",
-      async (req, res) => await CreateUser(req, res, usersCollection)
-    );
+    router.post("/users",async (req, res) => await CreateUser(req, res, usersCollection));
 
     // payment relate api
-    router.post(
-      "/create-payment-intent",
-      async (req, res) => await PaymentIntend(req, res)
-    );
+    router.post("/create-payment-intent",async (req, res) => await PaymentIntend(req, res));
 
     // confirmation log
     console.log("Routes initialized successfully");
