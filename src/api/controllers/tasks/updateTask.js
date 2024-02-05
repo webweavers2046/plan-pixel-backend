@@ -31,7 +31,6 @@ const updateTask = async (req, res, taskCollection) => {
 // Change a task's state: to-do, doing, done
 const updateTaskState = async (req, res, taskCollection) => {
   try {
-
     const { id, state } = req.query
     // // Making sure sent id is valid
     if (!ObjectId.isValid(id)) {
