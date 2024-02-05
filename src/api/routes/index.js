@@ -13,7 +13,6 @@ const { getAllUsers, updateUser } = require("../controllers/users");
 const router = express.Router();
 
 
-
 // Define the route initialization function
 const initializeRoutes = async () => {
   try {
