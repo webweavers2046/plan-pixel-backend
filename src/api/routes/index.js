@@ -28,51 +28,64 @@ const initializeRoutes = async () => {
     // Task related APIs
     router.get(
       "/tasks",
-      async (req, res) => await getAllTasks(req, res, tasksCollection)
+      async (req, res) => await getAllTasks(req, res, tasks)
     );
-    router.get(
-      "/tasks/:stats",
-      async (req, res) => await geTaskByStats(req, res, tasksCollection)
-    );
-
+        router.get(
+          "/tasks/:stats",
+          async (req, res) => await geTaskByStats(req, res, tasks)
+        );
     router.post(
       "/createTask",
-      async (req, res) => await CreateTask(req, res, tasksCollection)
+      async (req, res) => await CreateTask(req, res, tasks)
     );
     router.put(
       "/updateTask/:id",
-      async (req, res) => await updateTask(req, res, tasksCollection)
+      async (req, res) => await updateTask(req, res, tasks)
     );
     router.patch(
       "/updateTaskState",
-      async (req, res) => await updateTaskState(req, res, tasksCollection)
+      async (req, res) => await updateTaskState(req, res, tasks)
     );
 
     //Delete (task)
     router.delete(
       "/deleteTask/:id",
-      async (req, res) => await deleteTask(req, res, tasksCollection)
+      async (req, res) => await deleteTask(req, res, tasks)
     );
 
-    // user related api
+    // user related APIs
     router.get(
       "/users",
-      async (req, res) => await getAllUsers(req, res, usersCollection)
+      async (req, res) => await getAllUsers(req, res, users)
     );
     router.post(
       "/users",
-      async (req, res) => await CreateUser(req, res, usersCollection)
+      async (req, res) => await CreateUser(req, res, users)
     );
     router.put(
       "/users/:email",
-      async (req, res) => await updateUser(req, res, usersCollection)
+      async (req, res) => await updateUser(req, res, users)
     );
     router.post(
       "/users",
-      async (req, res) => await CreateUser(req, res, usersCollection)
+      async (req, res) => await CreateUser(req, res, users)
     );
 
-    // payment relate api
+    // Workspace related APIs
+    router.get(
+      "/workspaces",
+      async (req, res) => await workspaces(req, res, workspace)
+    );
+    router.get(
+      "/workspace-tasks/:workspace/:creator",
+      async (req, res) => await getWorkspaceTask(req, res, tasks)
+    );
+    router.post(
+      "/create-workspace",
+      async (req, res) => await createWorkspace(req, res, workspace)
+    );
+
+    // payment relate APIs
     router.post(
       "/create-payment-intent",
       async (req, res) => await PaymentIntend(req, res)
