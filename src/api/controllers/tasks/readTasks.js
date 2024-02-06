@@ -25,7 +25,17 @@ const getSingleTask = async (req, res, tasksCollection) => {
   }
 };
 
-
+// get task by stats
+const geTaskByStats = async (req, res, tasksCollection) => {
+  // const id = req.params.id;
+  const filter = {status: req.params.stats}
+  try {
+    const task = await tasksCollection.find(filter).toArray();
+    res.send(task);
+  } catch (error) {
+    res.status(500).send("Internal Server Error");
+  }
+};
 
 
 
@@ -34,4 +44,5 @@ const getSingleTask = async (req, res, tasksCollection) => {
 module.exports = {
   getAllTasks,
   getSingleTask,
+  geTaskByStats
 };
