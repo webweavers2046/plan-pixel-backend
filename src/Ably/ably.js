@@ -1,26 +1,7 @@
-const connectDB = require("./src/db/connectDB");
-const express = require("express");
-const applyMiddleWare = require("./src/middlewares/applyMiddleware");
-const createMongoClient = require("./src/db/CreateMongoClient");
-require("dotenv").config();
-const port = process.env.PORT || 5000;
-const app = express();
-
 // Add Ably integration
-const Ably = require("ably");
 const ably = new Ably.Realtime(process.env.ABLY_KEY);
 
-applyMiddleWare(app);
-
-const channel = ably.channels.get("tasks"); // Choose a channel name
-app.get("/", (req, res) => {
-  res.send("plan pixel successfully connected");
-});
-
-// Ably channel's logic
-channel.subscribe("tasks", (message) => {
-  // Handle received messages Received Ably message (message.data)
-});
+const createMongoClient = require("../db/CreateMongoClient");
 
 // MongoDB Change Stream to listen for changes in the tasks collection
 let tasksCollection;
@@ -28,8 +9,15 @@ let tasksCollection;
 // Connect to MongoDB
 const client = createMongoClient();
 
-// Connect to MongoDB and set up Ably logic outside the callback
-connectDB(app, () => {
+// Ably channel's logic
+channel.subscribe("tasks", (message) => {
+  // Handle received messages
+  console.log("Received Ably message:", message.data);
+});
+
+const channel = ably.channels.get("tasks"); // Choose a channel name
+
+const Ably = () => {
   client.connect().then(() => {
     console.log("Connected to MongoDB");
     const database = client.db("planPixelDB");
@@ -41,6 +29,8 @@ connectDB(app, () => {
       .then(async (initialTasks) => {
         // Publish initial data
         channel.publish("tasks", initialTasks);
+        console.log(initialTasks);
+
         // MongoDB Change Stream to listen for changes in the tasks collection
         const changeStream = tasksCollection.watch();
         changeStream.on("change", async () => {
@@ -57,7 +47,6 @@ connectDB(app, () => {
         console.error("Error loading initial tasks:", error);
       });
   });
-  app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
-  });
-});
+};
+
+module.exports = Ably;

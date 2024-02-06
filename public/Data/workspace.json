@@ -1,0 +1,24 @@
+[
+    {
+      "title": "Workspace 2",
+      "description": "Description of Workspace 2",
+      "creator": "userID2",
+      "members": ["userID2", "userID3"],
+      "tasks": []
+    },
+    {
+      "title": "Workspace 2",
+      "description": "Another Workspace Description",
+      "creator": "userID3",
+      "members": ["userID3", "userID4"],
+      "tasks": ["taskID1", "taskID2"]
+    },
+    {
+      "title": "Workspace 2",
+      "description": "Yet Another Workspace",
+      "creator": "userID4",
+      "members": [],
+      "tasks": []
+    }
+  ]
+  
