@@ -9,42 +9,69 @@
     },
     "priority": "High",
     "status": "done",
-    "userEmail": "alamin102410@gmail.com"
+    "creator": "alamin102410@gmail.com",
+    "members": ["member1", "member2"],
+    "comments": ["Comment 1", "Comment 2"],
+    "workspace":"65c0dd24fc0a061772bae410"
   },
   {
     "taskId": 2,
-    "title": "Implement user authentication",
-    "description": "Add secure user authentication functionality.",
-    "dates": {},
+    "title": "Update navigation",
+    "description": "Enhance website navigation for a seamless user experience.",
+    "dates": {
+      "startDate": "2024-02-23",
+      "dueDate": "2024-02-25"
+    },
     "priority": "Medium",
-    "status": "to-do",
-    "userEmail": "alamin102410@gmail.com"
+    "status": "upcoming",
+    "creator": "Sami@gmail.com",
+    "members": ["member2", "member3"],
+    "comments": ["Comment 3", "Comment 4"],
+    "Workspace":"65c0dd24fc0a061772bae410"
   },
   {
     "taskId": 3,
-    "title": "Optimize database queries",
-    "description": "Enhance database performance by optimizing queries.",
-    "dates": {},
-    "priority": "Low",
-    "status": "doing",
-    "userEmail": "alamin102410@gmail.com"
+    "title": "Implement contact form",
+    "description": "Add a functional contact form to the website.",
+    "dates": {
+      "startDate": "2024-02-26",
+      "dueDate": "2024-02-28"
+    },
+    "priority": "High",
+    "status": "to-do",
+    "creator": "Forhad@gmail.com",
+    "members": ["member1", "member3"],
+    "comments": ["Comment 5", "Comment 6"],
+    "Workspace":"65c0eea5f9dac91aaf34bb6f"
   },
   {
     "taskId": 4,
-    "title": "Integrate payment gateway",
-    "description": "Enable seamless transactions with payment gateway integration.",
-    "dates": {},
-    "priority": "High",
-    "status": "to-do",
-    "userEmail": "alamin102410@gmail.com"
+    "title": "Optimize images",
+    "description": "Ensure all website images are optimized for faster loading.",
+    "dates": {
+      "startDate": "2024-03-01",
+      "dueDate": "2024-03-03"
+    },
+    "priority": "Medium",
+    "status": "doing",
+    "creator": "Sajid@gmail.com",
+    "members": ["member1", "member2", "member3"],
+    "comments": ["Comment 7", "Comment 8"],
+    "Workspace":"65c0eea5f9dac91aaf34bb6f"
   },
   {
     "taskId": 5,
-    "title": "Bug fixes and testing",
-    "description": "Address any bugs and conduct thorough testing.",
-    "dates": {},
-    "priority": "Medium",
-    "status": "done",
-    "userEmail": "alamin102410@gmail.com"
+    "title": "Task 5",
+    "description": "Description for Task 5.",
+    "dates": {
+      "startDate": "2024-03-04",
+      "dueDate": "2024-03-06"
+    },
+    "priority": "Low",
+    "status": "to-do",
+    "creator": "Rahim@gmail.com",
+    "members": ["member2", "member3"],
+    "comments": ["Comment 9", "Comment 10"],
+    "workspace":"65c0dd24fc0a061772bae410"
   }
 ]
