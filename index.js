@@ -17,6 +17,7 @@ app.get("/", (req, res) => {
   res.send("plan pixel successfully connected");
 });
 
+
 // Ably channel's logic
 channel.subscribe("tasks", (message) => {
   // Handle received messages Received Ably message (message.data)
@@ -63,3 +64,5 @@ connectDB(app, () => {
     console.log(`Server is running on port ${port}`);
   });
 });
+
+module.exports = app
