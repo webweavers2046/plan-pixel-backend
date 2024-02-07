@@ -46,7 +46,9 @@ connectDB(app, () => {
         changeStream.on("change", async () => {
           try {
             // When there's a change, reload tasks and emit to Ably channel
-            const updatedTasks = await tasksCollection.find().toArray();
+            const updatedTasks = await tasksCollection.find().sort({ position: 1, updatedAt: -1 }).toArray();
+         
+            // console.log(updatedTasks)
             channel.publish("tasks", updatedTasks);
           } catch (error) {
             console.error("Error reloading and emitting tasks:", error);

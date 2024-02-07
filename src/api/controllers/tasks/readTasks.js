@@ -37,12 +37,9 @@ const geTaskByStats = async (req, res, tasksCollection) => {
   }
 };
 
-
-
-
-
 module.exports = {
   getAllTasks,
   getSingleTask,
   geTaskByStats
 };
+
