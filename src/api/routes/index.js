@@ -3,6 +3,7 @@ const {
   getAllTasks,
   getSingleTask,
   geTaskByStats,
+  getFilteredTasks,
 } = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
@@ -30,10 +31,14 @@ const initializeRoutes = async () => {
       "/tasks",
       async (req, res) => await getAllTasks(req, res, tasks)
     );
-        router.get(
-          "/tasks/:stats",
-          async (req, res) => await geTaskByStats(req, res, tasks)
-        );
+    router.get(
+      "/tasks/:stats",
+      async (req, res) => await geTaskByStats(req, res, tasks)
+    );
+    router.get(
+      "/tasksFiltered",
+      async (req, res) => await getFilteredTasks(req, res, tasks)
+    );
     router.post(
       "/createTask",
       async (req, res) => await CreateTask(req, res, tasks)

@@ -27,8 +27,7 @@ const getSingleTask = async (req, res, tasksCollection) => {
 
 // get task by stats
 const geTaskByStats = async (req, res, tasksCollection) => {
-  // const id = req.params.id;
-  const filter = {status: req.params.stats}
+  const filter = { status: req.params.stats };
   try {
     const task = await tasksCollection.find(filter).toArray();
     res.send(task);
@@ -37,12 +36,33 @@ const geTaskByStats = async (req, res, tasksCollection) => {
   }
 };
 
+const getFilteredTasks = async (req, res, tasksCollection) => {
+  try {
+    // Extracting query parameters from the request
+    const { targetDate, tasksOwner } = req.query;
+    // Constructing the filter object based on query parameters
+    const filter = {
+      "dates.startDate": { $lte: targetDate }, // Start date is less than or equal to the target date
+      "dates.dueDate": { $gt: targetDate }, // Due date is greater than or equal to the target date
+      members: { $in: [tasksOwner] }, // Filter by the specified member
+      status:'upcoming' //Filter by the specific tasks status
+    };
 
+    // Querying tasks using the provided tasksCollection and filter
+    const tasks = await tasksCollection.find(filter).toArray();
 
-
+    // Sending the filtered tasks as a JSON response
+    res.json(tasks);
+  } catch (error) {
+    // Handling errors and sending appropriate response
+    console.error(error);
+    res.status(500).json({ error: "Failed to fetch tasks" });
+  }
+};
 
 module.exports = {
   getAllTasks,
   getSingleTask,
-  geTaskByStats
+  geTaskByStats,
+  getFilteredTasks,
 };
