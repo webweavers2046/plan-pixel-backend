@@ -1,6 +1,11 @@
 const createDB = require("../../db/createDB");
 const express = require("express");
-const { getAllTasks, getSingleTask } = require("../controllers/tasks/readTasks");
+const {
+  getAllTasks,
+  getSingleTask,
+  geTaskByStats,
+  getFilteredTasks,
+} = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
 
@@ -25,11 +30,30 @@ const initializeRoutes = async () => {
     const workspaces = await createDB("workspace");
 
     // Task related APIs
-    router.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
-    router.post("/createTask", async (req, res) => await CreateTask(req, res, tasks));
-    router.put("/updateTask/:id", async (req, res) => await updateTask(req, res, tasks));
-    router.patch("/updateTaskState", async (req, res) => await updateTaskState(req, res, tasks));
-    router.delete("/deleteTask/:id", async (req, res) => await deleteTask(req, res, tasks));
+    router.get(
+      "/tasks",
+      async (req, res) => await getAllTasks(req, res, tasks)
+    );
+    router.get(
+      "/tasks/:stats",
+      async (req, res) => await geTaskByStats(req, res, tasks)
+    );
+    router.get(
+      "/tasksFiltered",
+      async (req, res) => await getFilteredTasks(req, res, tasks)
+    );
+    router.post(
+      "/createTask",
+      async (req, res) => await CreateTask(req, res, tasks)
+    );
+    router.put(
+      "/updateTask/:id",
+      async (req, res) => await updateTask(req, res, tasks)
+    );
+    router.patch(
+      "/updateTaskState",
+      async (req, res) => await updateTaskState(req, res, tasks)
+    );
 
     // User related APIs
     router.get("/users", async (req, res) => await getAllUsers(req, res, users));
