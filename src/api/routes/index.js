@@ -10,7 +10,9 @@ const { PaymentIntend } = require("../controllers/payment/payments");
 const { CreateUser, getAllUsers, updateUser, getSingleUser, updateUserImage } = require("../controllers/users");
 const createWorkspace = require("../controllers/workspace");
 const workspaces = require("../controllers/workspace/read-workspaces");
-const getWorkspaceTask = require("../controllers/workspace/read-tasks");
+const activeWorkspace = require("../controllers/workspace/activeWorkspace");
+const getUserWorkspacesByEmail = require("../controllers/workspace/read-tasks");
+
 
 const router = express.Router();
 
@@ -20,7 +22,7 @@ const initializeRoutes = async () => {
     // Create database collections
     const tasks = await createDB("tasks");
     const users = await createDB("users");
-    const worspace = await createDB("workspace");
+    const workspaces = await createDB("workspace");
 
     // Task related APIs
     router.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
@@ -37,9 +39,10 @@ const initializeRoutes = async () => {
     router.put("/userImage/:email", async (req, res) => await updateUserImage(req, res, users));
 
     // Workspace related APIs
-    router.get("/workspaces", async (req, res) => await workspaces(req, res, worspace));
-    router.get("/workspace-tasks/:workspace/:creator", async (req, res) => await getWorkspaceTask(req, res, tasks));
-    router.post("/create-workspace", async (req, res) => await createWorkspace(req, res, worspace));
+    // router.get("/workspaces", async (req, res) => await workspaces(req, res, workspaces));
+    router.get("/userWokspaces/:userEmail", async (req, res) => await getUserWorkspacesByEmail(req, res, workspaces));
+    router.get("/active-workspace/:workspaceId", async (req, res) => await activeWorkspace(req, res, workspaces,tasks,users));
+    router.post("/create-workspace/:creatorEmail", async (req, res) => await createWorkspace(req, res, workspaces));
 
     // Payment related API
     router.post("/create-payment-intent", async (req, res) => await PaymentIntend(req, res));
