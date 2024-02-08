@@ -1,6 +1,11 @@
 const createDB = require("../../db/createDB");
 const express = require("express");
-const { getAllTasks, getSingleTask } = require("../controllers/tasks/readTasks");
+const {
+  getAllTasks,
+  getSingleTask,
+  geTaskByStats,
+  getFilteredTasks,
+} = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
 
@@ -20,14 +25,33 @@ const initializeRoutes = async () => {
     // Create database collections
     const tasks = await createDB("tasks");
     const users = await createDB("users");
-    const worspace = await createDB("workspace");
+    const workspace = await createDB("workspace");
 
     // Task related APIs
-    router.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
-    router.post("/createTask", async (req, res) => await CreateTask(req, res, tasks));
-    router.put("/updateTask/:id", async (req, res) => await updateTask(req, res, tasks));
-    router.patch("/updateTaskState", async (req, res) => await updateTaskState(req, res, tasks));
-    router.delete("/deleteTask/:id", async (req, res) => await deleteTask(req, res, tasks));
+    router.get(
+      "/tasks",
+      async (req, res) => await getAllTasks(req, res, tasks)
+    );
+    router.get(
+      "/tasks/:stats",
+      async (req, res) => await geTaskByStats(req, res, tasks)
+    );
+    router.get(
+      "/tasksFiltered",
+      async (req, res) => await getFilteredTasks(req, res, tasks)
+    );
+    router.post(
+      "/createTask",
+      async (req, res) => await CreateTask(req, res, tasks)
+    );
+    router.put(
+      "/updateTask/:id",
+      async (req, res) => await updateTask(req, res, tasks)
+    );
+    router.patch(
+      "/updateTaskState",
+      async (req, res) => await updateTaskState(req, res, tasks)
+    );
 
     // User related APIs
     router.get("/users", async (req, res) => await getAllUsers(req, res, users));
@@ -37,9 +61,9 @@ const initializeRoutes = async () => {
     router.put("/userImage/:email", async (req, res) => await updateUserImage(req, res, users));
 
     // Workspace related APIs
-    router.get("/workspaces", async (req, res) => await workspaces(req, res, worspace));
+    router.get("/workspaces", async (req, res) => await workspaces(req, res, workspace));
     router.get("/workspace-tasks/:workspace/:creator", async (req, res) => await getWorkspaceTask(req, res, tasks));
-    router.post("/create-workspace", async (req, res) => await createWorkspace(req, res, worspace));
+    router.post("/create-workspace", async (req, res) => await createWorkspace(req, res, workspace));
 
     // Payment related API
     router.post("/create-payment-intent", async (req, res) => await PaymentIntend(req, res));
