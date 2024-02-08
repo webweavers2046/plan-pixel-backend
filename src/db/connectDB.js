@@ -6,7 +6,7 @@ const connectDB = async (app, callback) => {
   const client = createMongoClient();
 
   try {
-    await client.connect();
+     client.connect();
 
     // Call the route initialization function
     await allRoutes.initializeRoutes();
