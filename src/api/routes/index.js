@@ -1,4 +1,5 @@
 const createDB = require("../../db/createDB");
+const express = require("express");
 const {
   getAllTasks,
   getSingleTask,
@@ -7,15 +8,15 @@ const {
 } = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
+
 const updateTaskState = require("../controllers/tasks/updateTask");
 const deleteTask = require("../controllers/tasks/deleteTask");
 const { PaymentIntend } = require("../controllers/payment/payments");
-const express = require("express");
-const { CreateUser } = require("../controllers/users/CreateUser");
-const { getAllUsers, updateUser } = require("../controllers/users");
+const { CreateUser, getAllUsers, updateUser, getSingleUser, updateUserImage } = require("../controllers/users");
 const createWorkspace = require("../controllers/workspace");
 const workspaces = require("../controllers/workspace/read-workspaces");
 const getWorkspaceTask = require("../controllers/workspace/read-tasks");
+
 const router = express.Router();
 
 // Define the route initialization function
@@ -52,51 +53,22 @@ const initializeRoutes = async () => {
       async (req, res) => await updateTaskState(req, res, tasks)
     );
 
-    //Delete (task)
-    router.delete(
-      "/deleteTask/:id",
-      async (req, res) => await deleteTask(req, res, tasks)
-    );
-
-    // user related APIs
-    router.get(
-      "/users",
-      async (req, res) => await getAllUsers(req, res, users)
-    );
-    router.post(
-      "/users",
-      async (req, res) => await CreateUser(req, res, users)
-    );
-    router.put(
-      "/users/:email",
-      async (req, res) => await updateUser(req, res, users)
-    );
-    router.post(
-      "/users",
-      async (req, res) => await CreateUser(req, res, users)
-    );
+    // User related APIs
+    router.get("/users", async (req, res) => await getAllUsers(req, res, users));
+    router.get("/users/:email", async (req, res) => await getSingleUser(req, res, users));
+    router.post("/users", async (req, res) => await CreateUser(req, res, users));
+    router.put("/users/:email", async (req, res) => await updateUser(req, res, users));
+    router.put("/userImage/:email", async (req, res) => await updateUserImage(req, res, users));
 
     // Workspace related APIs
-    router.get(
-      "/workspaces",
-      async (req, res) => await workspaces(req, res, workspace)
-    );
-    router.get(
-      "/workspace-tasks/:workspace/:creator",
-      async (req, res) => await getWorkspaceTask(req, res, tasks)
-    );
-    router.post(
-      "/create-workspace",
-      async (req, res) => await createWorkspace(req, res, workspace)
-    );
+    router.get("/workspaces", async (req, res) => await workspaces(req, res, workspace));
+    router.get("/workspace-tasks/:workspace/:creator", async (req, res) => await getWorkspaceTask(req, res, tasks));
+    router.post("/create-workspace", async (req, res) => await createWorkspace(req, res, workspace));
 
-    // payment relate APIs
-    router.post(
-      "/create-payment-intent",
-      async (req, res) => await PaymentIntend(req, res)
-    );
+    // Payment related API
+    router.post("/create-payment-intent", async (req, res) => await PaymentIntend(req, res));
 
-    // confirmation log
+    // Confirmation log
     console.log("Routes initialized successfully");
   } catch (error) {
     console.error("Error initializing routes:", error);

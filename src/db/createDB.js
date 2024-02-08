@@ -1,5 +1,5 @@
 /*
- This file provides you a funtion to create
+ This file provides you a function to create
   mongodb database and collection
 */
 
@@ -11,7 +11,7 @@ const createDB = async (collectionName) => {
   try {
     await client.connect();
     const collection = client.db("planPixelDB").collection(collectionName);
-    // return dababase collection
+    // return database collection
     return collection;
   } catch (error) {
     console.error('Error connecting to MongoDB:', error);

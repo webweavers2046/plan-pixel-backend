@@ -11,7 +11,7 @@ const connectDB = async (app, callback) => {
     // Call the route initialization function
     await allRoutes.initializeRoutes();
     // Here you define all of your routes
-    app.use(allRoutes.router);
+    await app.use(allRoutes.router);
 
     if (callback) {
       callback();
