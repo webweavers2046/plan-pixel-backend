@@ -12,7 +12,8 @@
     "creator": "alamin102410@gmail.com",
     "members": ["member1", "member2"],
     "comments": ["Comment 1", "Comment 2"],
-    "workspace":"65c0dd24fc0a061772bae410"
+    "workspace":"65c0dd24fc0a061772bae410",
+    "position":0
   },
   {
     "taskId": 2,
@@ -27,7 +28,8 @@
     "creator": "Sami@gmail.com",
     "members": ["member2", "member3"],
     "comments": ["Comment 3", "Comment 4"],
-    "Workspace":"65c0dd24fc0a061772bae410"
+    "workspace":"65c0dd24fc0a061772bae410",
+    "position":1
   },
   {
     "taskId": 3,
@@ -42,7 +44,8 @@
     "creator": "Forhad@gmail.com",
     "members": ["member1", "member3"],
     "comments": ["Comment 5", "Comment 6"],
-    "Workspace":"65c0eea5f9dac91aaf34bb6f"
+    "workspace":"65c0eea5f9dac91aaf34bb6f",
+    "position":2
   },
   {
     "taskId": 4,
@@ -57,7 +60,8 @@
     "creator": "Sajid@gmail.com",
     "members": ["member1", "member2", "member3"],
     "comments": ["Comment 7", "Comment 8"],
-    "Workspace":"65c0eea5f9dac91aaf34bb6f"
+    "workspace":"65c0eea5f9dac91aaf34bb6f",
+    "position":3
   },
   {
     "taskId": 5,
@@ -72,6 +76,7 @@
     "creator": "Rahim@gmail.com",
     "members": ["member2", "member3"],
     "comments": ["Comment 9", "Comment 10"],
-    "workspace":"65c0dd24fc0a061772bae410"
+    "workspace":"65c0dd24fc0a061772bae410",
+    "position":4
   }
 ]

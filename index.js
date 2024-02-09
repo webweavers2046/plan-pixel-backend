@@ -17,6 +17,7 @@ app.get("/", (req, res) => {
   res.send("plan pixel successfully connected");
 });
 
+
 // Ably channel's logic
 channel.subscribe("tasks", (message) => {
   // Handle received messages Received Ably message (message.data)
@@ -34,6 +35,7 @@ connectDB(app, () => {
     console.log("Connected to MongoDB");
     const database = client.db("planPixelDB");
     tasksCollection = database.collection("tasks");
+    workspaceCollection = database.collection("workspace");
 
     tasksCollection
       .find()
@@ -46,7 +48,10 @@ connectDB(app, () => {
         changeStream.on("change", async () => {
           try {
             // When there's a change, reload tasks and emit to Ably channel
-            const updatedTasks = await tasksCollection.find().toArray();
+            const updatedTasks = await tasksCollection.find().sort({ position: 1, updatedAt: -1 }).toArray();
+
+
+            // console.log(updatedTasks)
             channel.publish("tasks", updatedTasks);
           } catch (error) {
             console.error("Error reloading and emitting tasks:", error);
@@ -61,3 +66,5 @@ connectDB(app, () => {
     console.log(`Server is running on port ${port}`);
   });
 });
+
+module.exports = app
