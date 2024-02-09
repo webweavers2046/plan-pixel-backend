@@ -8,8 +8,6 @@ const {
 } = require("../controllers/tasks/readTasks");
 const { CreateTask } = require("../controllers/tasks/createTask");
 const updateTask = require("../controllers/tasks/updateTask");
-
-const updateTaskState = require("../controllers/tasks/updateTask");
 const deleteTask = require("../controllers/tasks/deleteTask");
 const { PaymentIntend } = require("../controllers/payment/payments");
 const { createUser, getAllUsers, updateUser, getSingleUser, updateUserImage } = require("../controllers/users");
@@ -17,6 +15,7 @@ const createWorkspace = require("../controllers/workspace");
 const workspaces = require("../controllers/workspace/read-workspaces");
 const activeWorkspace = require("../controllers/workspace/activeWorkspace");
 const getUserWorkspacesByEmail = require("../controllers/workspace/read-tasks");
+const updateTaskState = require("../controllers/tasks/updateTaskState");
 
 
 const router = express.Router();
