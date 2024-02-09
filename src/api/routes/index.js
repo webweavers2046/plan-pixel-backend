@@ -52,6 +52,10 @@ const initializeRoutes = async () => {
       "/updateTaskState",
       async (req, res) => await updateTaskState(req, res, tasks)
     );
+    router.delete(
+      "/deleteTask/:id",
+      async (req, res) => await deleteTask(req, res, tasks)
+    )
 
     // User related APIs
     router.get("/users", async (req, res) => await getAllUsers(req, res, users));
