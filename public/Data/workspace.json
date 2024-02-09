@@ -1,24 +1,28 @@
 [
     {
-      "title": "Workspace 2",
+      "title": "PlanPixel",
       "description": "Description of Workspace 2",
       "creator": "userID2",
-      "members": ["userID2", "userID3"],
-      "tasks": []
+      "members": ["ahteshamsajid8@gmail.com", "shakilahmmed8882@gmail.com",""],
+      "tasks": ["65c265a11da5cfa8711f095c","65c265a11da5cfa8711f095e"],
+      "isActive":false
     },
+    
     {
       "title": "Workspace 2",
       "description": "Another Workspace Description",
       "creator": "userID3",
-      "members": ["userID3", "userID4"],
-      "tasks": ["taskID1", "taskID2"]
+      "members": ["shakilahmmed8882@gmail.com"],
+      "tasks": ["65c265a11da5cfa8711f095f", "65c26e544c6fae22f1c45958"],
+      "isActive":false
     },
     {
       "title": "Workspace 2",
       "description": "Yet Another Workspace",
       "creator": "userID4",
-      "members": [],
-      "tasks": []
+      "members": ["ahteshamsajid8@gmail.com"],
+      "tasks": ["65c38efe27cb98284f8d0ace"],
+      "isActive":false
     }
   ]
   

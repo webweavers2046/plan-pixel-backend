@@ -1,10 +1,24 @@
-const createWorkspace = async (req, res,workspace) => {
-  const newWrokspace = req.body;
+const createWorkspace = async (req, res, workspace) => {
+  const newWorkspace = req.body;
+  const {creatorEmail} = req.params
 
-  console.log(newWrokspace)
   try {
-    const insertedTask = await workspace.insertOne(newWrokspace);
-    res.send(insertedTask);
+    // Set all workspaces' isActive to false
+    await workspace.updateMany({}, { $set: { isActive: false } });
+
+    // Insert the new workspace
+    const isWorkspaceInserted = await workspace.insertOne({
+      ...newWorkspace,
+      creator:creatorEmail,
+      // Set the new workspace as active
+      isActive: true, 
+    });
+
+    if (isWorkspaceInserted) {
+      res.send(isWorkspaceInserted);
+    } else {
+      res.status(500).send("Failed to insert workspace");
+    }
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }

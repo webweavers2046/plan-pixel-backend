@@ -1,9 +1,24 @@
-const getWorkspaceTask = async (req, res, tasks) => {
-  const {workspace,creator} = req.params;
-  console.log(workspace,creator);
-//   console.log(tasks);
-  const alltasks = await tasks.find({workspace:workspace,creator:creator}).toArray();
-  res.send(alltasks);
+const getUserWorkspacesByEmail = async (req, res, workspace) => {
+  const { userEmail } = req.params;
+
+  try {
+    // Find workspaces where the user's email is in the members array or the creator is the user
+    const userWorkspaces = await workspace
+      .find({
+        $or: [
+          { members: { $in: [userEmail] } },
+          { creator: userEmail },
+        ],
+      })
+      .project({ title: 1 }) // Only retrieve the title field
+      .toArray();
+
+    // Send the workspace titles back to the client
+    res.json(userWorkspaces);
+  } catch (error) {
+    console.error("Error fetching user workspaces:", error);
+    res.status(500).send("Internal Server Error");
+  }
 };
 
-module.exports = getWorkspaceTask;
+module.exports = getUserWorkspacesByEmail;
