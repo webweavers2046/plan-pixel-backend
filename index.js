@@ -2,7 +2,7 @@ const connectDB = require("./src/db/connectDB");
 const express = require("express");
 const applyMiddleWare = require("./src/middlewares/applyMiddleware");
 require("dotenv").config();
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 50001;
 const app = express();
 
 applyMiddleWare(app);

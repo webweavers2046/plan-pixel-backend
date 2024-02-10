@@ -15,7 +15,7 @@ const activeWorkspace = async (
         isActive: true,
       });
 
-      const taskIdsInWorkspace = existingActiveWorkspace.tasks || [];
+      const taskIdsInWorkspace = existingActiveWorkspace?.tasks || [];
 
       // Fetch all tasks for the activated workspace using the task IDs
       const allTasksInWorkspace = await tasksCollection
