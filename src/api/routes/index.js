@@ -34,6 +34,10 @@ const initializeRoutes = async () => {
       async (req, res) => await getAllTasks(req, res, tasks)
     );
     router.get(
+      "/singleTask/:id",
+      async (req, res) => await getSingleTask(req, res, tasks)
+    );
+    router.get(
       "/tasks/:stats",
       async (req, res) => await geTaskByStats(req, res, tasks)
     );
@@ -48,6 +52,10 @@ const initializeRoutes = async () => {
     router.put(
       "/updateTask/:id",
       async (req, res) => await updateTask(req, res, tasks)
+    );
+    router.delete(
+      "/deleteTask/:id",
+      async (req, res) => await deleteTask(req, res, tasks)
     );
     router.patch(
       "/updateTaskState",
