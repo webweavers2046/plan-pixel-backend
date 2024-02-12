@@ -17,6 +17,8 @@
     "activeWorkspace": "",
     "workspaces": ["65c9cec18670cdc7b4e8f4c5", "65c9cec18670cdc7b4e8f4c7"],
     "tasks": ["65c713fbecd9dca9f4aa817e", "65c713fbecd9dca9f4aa8185", "65c713fbecd9dca9f4aa8187"],
+    "skills":"",
+    "location":"",
     "lastModifiedBy":""
 
   },
@@ -38,7 +40,10 @@
     "activeWorkspace": "workspace2",
     "workspaces": ["65c9cec18670cdc7b4e8f4c5"],
     "tasks": ["65c713fbecd9dca9f4aa8181", "65c713fbecd9dca9f4aa8184"],
+    "skills":"",
+    "location":"",
     "lastModifiedBy":""
+    
   },
   {
     "id": 3,
@@ -58,6 +63,8 @@
     "activeWorkspace": "65c9cec18670cdc7b4e8f4c6",
     "workspaces": ["65c9cec18670cdc7b4e8f4c6", "65c9cec18670cdc7b4e8f4c7"],
     "tasks": ["65c713fbecd9dca9f4aa8181", "65c713fbecd9dca9f4aa8186"],
+    "skills":"",
+    "location":"",
     "lastModifiedBy":""
   },
   {
@@ -78,6 +85,8 @@
     "activeWorkspace": "65c9cec18670cdc7b4e8f4c5",
     "workspaces": ["65c9cec18670cdc7b4e8f4c5", "65c9cec18670cdc7b4e8f4c7"],
     "tasks": ["65c713fbecd9dca9f4aa817f", "65c713fbecd9dca9f4aa8184", "65c713fbecd9dca9f4aa8187", "65c713fbecd9dca9f4aa818a"],
+    "skills":"",
+    "location":"",
     "lastModifiedBy":""
   },
   {
@@ -98,6 +107,8 @@
     "activeWorkspace": "65c9cec18670cdc7b4e8f4c6",
     "workspaces": ["65c9cec18670cdc7b4e8f4c6", "65c9cec18670cdc7b4e8f4c7"],
     "tasks": ["65c713fbecd9dca9f4aa817f", "65c713fbecd9dca9f4aa8187", "65c713fbecd9dca9f4aa818a"],
+    "skills":"thinking",
+    "location":"Bangladesh",
     "lastModifiedBy":""
 
   },
@@ -119,6 +130,8 @@
     "activeWorkspace": "65c9cec18670cdc7b4e8f4c6",
     "workspaces": ["65c9cec18670cdc7b4e8f4c6", "65c9cec18670cdc7b4e8f4c7"],
     "tasks": ["65c713fbecd9dca9f4aa8181", "65c713fbecd9dca9f4aa8187", "65c713fbecd9dca9f4aa818a"],
+    "skills":"",
+    "location":"",
     "lastModifiedBy":""
   }
 ]

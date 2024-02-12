@@ -15,6 +15,7 @@ const addMemberToWorkspace = require("../api/controllers/workspace/addMemberToWo
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
+const searchMembers = require("../api/controllers/workspace/search");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -54,8 +55,10 @@ const connectDB = async (app, callback) => {
     app.get("/userWokspaces/:userEmail",async (req, res) => await getUserWorkspacesByEmail(req, res, users,workspaces));
     app.get("/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
     app.get('/api/workspaces/active', async (req, res) =>await getExistingActiveWrokspace(req,res,workspaces))
+    app.get("/api/members/search",async(req,res) => await searchMembers(req,res,users))
+
     app.post("/create-workspace/:creatorEmail",async (req, res) => await createWorkspace(req, res, users, workspaces));
-    app.post("/add-member-to-workspace",async(req,res)=> await addMemberToWorkspace(req,res,workspaces))
+    app.post("/add-member-to-workspace",async(req,res)=> await addMemberToWorkspace(req,res,users,workspaces))
     app.put('/updateWorkspace/:workspaceId', async (req,res) => await updateWorkspace(req,res,workspaces))
 
     app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,workspaces))

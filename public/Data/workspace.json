@@ -3,8 +3,8 @@
       "title": "PlanPixel",
       "description": "PlanPixel is multifaced work management project aimed to to create a personalized workpsce for your organized planning and collaboration with team members seamlessly",
       "creator": "shakilahmmed8882@gmail.com",
-      "members": ["mdmazharulislam2046@gmail.com", "shakilahmmed8882@gmail.com","smd71430@gmail.com"],
-      "tasks": ["65c609d6968a68416897e38a","65c609d6968a68416897e38c","65c609d6968a68416897e38d","65c609d6968a68416897e38e","65c609d6968a68416897e38f"],
+      "members": [],
+      "tasks": [],
       "isActive":false,
       "lastModifiedBy":""
     },
@@ -13,8 +13,8 @@
       "title": "Workspace 2",
       "description": "Another Workspace Description",
       "creator": "forhadairdrop@gmail.com",
-      "members": ["alamin102410@gmail.com","ahteshamsajid8@gmail.com","forhadairdrop@gmail.com"],
-      "tasks": ["65c265a11da5cfa8711f095f", "65c26e544c6fae22f1c45958"],
+      "members": [],
+      "tasks": [],
       "isActive":false,
       "lastModifiedBy":""
     },
@@ -22,8 +22,8 @@
       "title": "Our world",
       "description": "World get revolutionized gradually are you adaping all with that?",
       "creator": "ahteshamsajid8@gmail.com",
-      "members": ["ahteshamsajid8@gmail.com","forhadairdrop@gmail.com","alamin102410@gmail.com","shakilahmmed8882@gmail.com","smd71430@gmail.com"],
-      "tasks": ["65c38efe27cb98284f8d0ace"],
+      "members": [],
+      "tasks": [],
       "isActive":false,
       "lastModifiedBy":""
     }
