@@ -6,11 +6,15 @@ const { getAllUsers, getSingleUser, createUser, updateUser, updateUserImage} = r
 const { CreateTask } = require("../api/controllers/tasks/createTask");
 const updateTaskState = require("../api/controllers/tasks/updateTask");
 const deleteTask = require("../api/controllers/tasks/deleteTask");
+
 const getUserWorkspacesByEmail = require("../api/controllers/workspace/read-tasks");
 const activeWorkspace = require("../api/controllers/workspace/activeWorkspace");
 const { PaymentIntend } = require("../api/controllers/payment/payments");
 const createWorkspace = require("../api/controllers/workspace");
 const addMemberToWorkspace = require("../api/controllers/workspace/addMemberToWorkspace");
+const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
+const updateWorkspace = require("../api/controllers/workspace/update");
+const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -32,7 +36,7 @@ const connectDB = async (app, callback) => {
 
 
     // Task related APIs
-    app.post("/createTask",async (req, res) => await CreateTask(req, res, tasks));
+    app.post("/createTask/:activeWorkspaceId/:userEmail",async (req, res) => await CreateTask(req, res, users, tasks,workspaces));
     app.put("/updateTask/:id",async (req, res) => await updateTaskState(req, res, tasks));
     app.patch("/updateTaskState",async (req, res) => await updateTaskState(req, res, tasks));
     app.delete("/deleteTask/:id",async (req, res) => await deleteTask(req, res, tasks));
@@ -47,11 +51,15 @@ const connectDB = async (app, callback) => {
   
     // Workspace related APIs
     // router.get("/workspaces", async (req, res) => await workspaces(req, res, workspaces));
-    app.get("/userWokspaces/:userEmail",async (req, res) => await getUserWorkspacesByEmail(req, res, workspaces));
+    app.get("/userWokspaces/:userEmail",async (req, res) => await getUserWorkspacesByEmail(req, res, users,workspaces));
     app.get("/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
-    app.post("/create-workspace/:creatorEmail",async (req, res) => await createWorkspace(req, res, workspaces));
+    app.get('/api/workspaces/active', async (req, res) =>await getExistingActiveWrokspace(req,res,workspaces))
+    app.post("/create-workspace/:creatorEmail",async (req, res) => await createWorkspace(req, res, users, workspaces));
     app.post("/add-member-to-workspace",async(req,res)=> await addMemberToWorkspace(req,res,workspaces))
+    app.put('/updateWorkspace/:workspaceId', async (req,res) => await updateWorkspace(req,res,workspaces))
 
+    app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,workspaces))
+    app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,workspaces));
 
 
     // Payment related API

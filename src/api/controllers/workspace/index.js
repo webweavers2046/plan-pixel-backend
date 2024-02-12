@@ -1,6 +1,6 @@
-const createWorkspace = async (req, res, workspace) => {
+const createWorkspace = async (req, res, usersCollection, workspace) => {
   const newWorkspace = req.body;
-  const {creatorEmail} = req.params
+  const { creatorEmail } = req.params;
 
   try {
     // Set all workspaces' isActive to false
@@ -9,10 +9,20 @@ const createWorkspace = async (req, res, workspace) => {
     // Insert the new workspace
     const isWorkspaceInserted = await workspace.insertOne({
       ...newWorkspace,
-      creator:creatorEmail,
+      creator: creatorEmail,
       // Set the new workspace as active
-      isActive: true, 
+      isActive: true,
+      lastModifiedBy: creatorEmail,
     });
+
+
+    // User collection pushing id to the workspace array
+    const newWorkspaceId = isWorkspaceInserted.insertedId;
+    // Push the new workspace ID into the 'workspaces' array
+    await usersCollection.updateOne(
+      { email: creatorEmail },
+      { $push: { workspaces: newWorkspaceId } }
+    );
 
     if (isWorkspaceInserted) {
       res.send(isWorkspaceInserted);
