@@ -2,6 +2,7 @@
 
 const CreateTask = async (req, res, tasksCollection) => {
   const newTask = req.body;
+console.log(newTask);
   try {
     const insertedTask = await tasksCollection.insertOne(newTask);
     res.send(insertedTask);

@@ -1,7 +1,7 @@
 const createWorkspace = async (req, res, workspace) => {
   const newWorkspace = req.body;
   const {creatorEmail} = req.params
-
+console.log(creatorEmail);
   try {
     // Set all workspaces' isActive to false
     await workspace.updateMany({}, { $set: { isActive: false } });
@@ -16,6 +16,7 @@ const createWorkspace = async (req, res, workspace) => {
 
     if (isWorkspaceInserted) {
       res.send(isWorkspaceInserted);
+      console.log(isWorkspaceInserted);
     } else {
       res.status(500).send("Failed to insert workspace");
     }
