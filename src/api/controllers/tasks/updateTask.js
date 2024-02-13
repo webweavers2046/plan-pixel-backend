@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
-// const isValidObjectId = require('../../../utils/isValidObjectId');
 
 const updateTask = async (req, res, taskCollection) => {
   try {
     const taskId = req.params.id;
+    console.log(taskId);
     const updatedTaskData = req.body;
 
     // Ensure taskId is a valid ObjectId
