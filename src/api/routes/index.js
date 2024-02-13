@@ -1,4 +1,3 @@
-
 const createDB = require("../../db/createDB");
 const express = require("express");
 const {
@@ -88,4 +87,3 @@ const initializeRoutes = async () => {
 
 // Export the router initializer function
 module.exports = { initializeRoutes, router };
-

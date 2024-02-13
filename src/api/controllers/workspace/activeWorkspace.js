@@ -8,14 +8,17 @@ const activeWorkspace = async (
   usersCollection
 ) => {
   const { workspaceId } = req.query;
+  const { userEmail } = req.query;
+  console.log(userEmail)
 
   try {
     if (!workspaceId) {
-      const existingActiveWorkspace = await workspace.findOne({
-        isActive: true,
-      });
+      const existingActiveWorkspace = await usersCollection.findOne({email:userEmail});
+      const activeWorkspaceId = existingActiveWorkspace?.activeWorkspace
+      const activeWorkspace= await workspace.findOne({_id: new ObjectId(activeWorkspaceId)});
+     
 
-      const taskIdsInWorkspace = existingActiveWorkspace?.tasks || [];
+      const taskIdsInWorkspace = activeWorkspace?.tasks || [];
 
       // Fetch all tasks for the activated workspace using the task IDs
       const allTasksInWorkspace = await tasksCollection
@@ -23,7 +26,6 @@ const activeWorkspace = async (
           _id: { $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)) },
         })
         .toArray();
-
       return res.send(allTasksInWorkspace);
     }
 
@@ -42,7 +44,7 @@ const activeWorkspace = async (
     );
 
     if (!updatedWorkspace) {
-      return res.status(404).send("Workspace not found");
+      return res.send("Workspace not found");
     }
     // Retrieve tasks IDs and members email from the workspace
     const taskIdsInWorkspace = updatedWorkspace.tasks || [];

@@ -1,28 +1,31 @@
 [
     {
       "title": "PlanPixel",
-      "description": "Description of Workspace 2",
-      "creator": "userID2",
-      "members": ["ahteshamsajid8@gmail.com", "shakilahmmed8882@gmail.com",""],
-      "tasks": ["65c609d6968a68416897e38a","65c609d6968a68416897e38c","65c609d6968a68416897e38d","65c609d6968a68416897e38e","65c609d6968a68416897e38f"],
-      "isActive":false
+      "description": "PlanPixel is multifaced work management project aimed to to create a personalized workpsce for your organized planning and collaboration with team members seamlessly",
+      "creator": "shakilahmmed8882@gmail.com",
+      "members": [],
+      "tasks": [],
+      "isActive":false,
+      "lastModifiedBy":""
     },
     
     {
       "title": "Workspace 2",
       "description": "Another Workspace Description",
-      "creator": "userID3",
-      "members": ["shakilahmmed8882@gmail.com"],
-      "tasks": ["65c265a11da5cfa8711f095f", "65c26e544c6fae22f1c45958"],
-      "isActive":false
+      "creator": "forhadairdrop@gmail.com",
+      "members": [],
+      "tasks": [],
+      "isActive":false,
+      "lastModifiedBy":""
     },
     {
-      "title": "Workspace 2",
-      "description": "Yet Another Workspace",
-      "creator": "userID4",
-      "members": ["ahteshamsajid8@gmail.com"],
-      "tasks": ["65c38efe27cb98284f8d0ace"],
-      "isActive":false
+      "title": "Our world",
+      "description": "World get revolutionized gradually are you adaping all with that?",
+      "creator": "ahteshamsajid8@gmail.com",
+      "members": [],
+      "tasks": [],
+      "isActive":false,
+      "lastModifiedBy":""
     }
   ]
   
