@@ -64,18 +64,20 @@ connectDB(app, () => {
     
     // If undefined, use the last known documentId
     const finalDocumentId = updatedDocumentId || lastModifiedDocumentId;
-    const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(finalDocumentId) });
-    const userEmail = activeWorkspace.lastModifiedBy
+    const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(finalDocumentId)},{projection:{_id:0, lastModifiedBy:1}});
+    const userEmail = activeWorkspace?.lastModifiedBy
+    const update = {
+      $set: {
+        lastModifiedBy: userEmail,
+        activeWorkspace: finalDocumentId,
+      }
+    };
 
-
-// const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(finalDocumentId)}
-//     ,{projection: { _id:0,lastModifiedBy: 1 } });
-//     const userEmail = activeWorkspace.lastModifiedBy
-    
- 
-    const user = await usersCollection.findOne({ email: userEmail });
+    const user = await usersCollection.findOne({ email: userEmail});
+    await usersCollection.updateOne({email:userEmail},update)
+    console.log(user)
     // get user workspace field > ids then fetch them from collection
-    const workspacesField = user.workspaces || [];
+    const workspacesField = user?.workspaces || [];
     const workspaceIds = workspacesField.map((id) => new ObjectId(id));
     const userWorkspaces = await workspaceCollection.find({ _id: { $in: workspaceIds } }).toArray();
 
@@ -148,7 +150,6 @@ connectDB(app, () => {
       console.error("Error reloading and emitting tasks:", error);
     }
   });
-
 
 
     })
