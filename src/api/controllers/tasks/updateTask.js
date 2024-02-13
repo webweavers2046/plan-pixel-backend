@@ -19,7 +19,6 @@ const updateTask = async (req, res, taskCollection) => {
 
     // Updating the task in the MongoDB collection
     const result = await taskCollection.updateOne(filter, update);
-
     res.send(result)
   } catch (error) {
     console.error('Error updating task:', error);

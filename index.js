@@ -60,11 +60,9 @@ connectDB(app, () => {
     }
 
 
-
-    
     // If undefined, use the last known documentId
     const finalDocumentId = updatedDocumentId || lastModifiedDocumentId;
-    const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(finalDocumentId)},{projection:{_id:0, lastModifiedBy:1}});
+    const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(finalDocumentId)},{projection:{}});
     const userEmail = activeWorkspace?.lastModifiedBy
     const update = {
       $set: {
@@ -75,7 +73,7 @@ connectDB(app, () => {
 
     const user = await usersCollection.findOne({ email: userEmail});
     await usersCollection.updateOne({email:userEmail},update)
-    console.log(user)
+    
     // get user workspace field > ids then fetch them from collection
     const workspacesField = user?.workspaces || [];
     const workspaceIds = workspacesField.map((id) => new ObjectId(id));
@@ -110,34 +108,31 @@ connectDB(app, () => {
   // publish latest task when task collection contents get modified
   changeStreamTasks.on("change", async (changeEvent) => {
     try {
-
       
     // Check if documentId is updated
     // const updatedDocumentId = changeEvent.documentKey._id.toString();
     const updatedDocumentId = changeEvent.documentKey._id.toString();
 
-    const userEmail = await tasksCollection.findOne(
+    const lastChangedId = await tasksCollection.findOne(
       { _id: new ObjectId(updatedDocumentId) },
       { projection: { _id:0,lastModifiedBy: 1 } }
     );
     
-    
+    const userEmail = lastChangedId?.lastModifiedBy
     const user = await usersCollection.findOne({ email: userEmail });
-    // get user workspace field > ids then fetch them from collection
-    const workspacesField = user?.workspaces || [];
-    const workspaceIds = workspacesField?.map((id) => new ObjectId(id));
-    const userWorkspaces = await workspaceCollection?.find({ _id: { $in: workspaceIds } }).toArray();
+    const activeWorkspace = await workspaceCollection.findOne({_id: new ObjectId(user?.activeWorkspace)}) 
+    const userWokspaceIds = await user?.workspaces?.map(id => new ObjectId(id))
+    const userWorkspaces = await workspaceCollection?.find({ _id: { $in: userWokspaceIds } }).toArray();
+    
+    const workspaceTasksIds = activeWorkspace?.tasks?.map(workspaceId => new ObjectId(workspaceId))
+    const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds } }).toArray();
+    
+    const workspaceMembersEmails = activeWorkspace?.members?.map(member => member)
+    const allMembersInWorkspace = await usersCollection?.find({ email: { $in: workspaceMembersEmails } }).toArray();
 
-    // Retrieve tasks IDs and members email from the workspace
-    const taskIdsInWorkspace = activeWorkspace?.tasks || [];
-    const membersEmailsInWorkspace = activeWorkspace?.members || [];
 
 
-    const allTasksInWorkspace = await tasksCollection.find({ _id: { $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)) } }).toArray();
-    // Fetch all members for the activated workspace using the member emails
-    const allMembersInWorkspace = await usersCollection.find({ email: { $in: membersEmailsInWorkspace?.map((user) => user) } }).toArray();
 
-       // Publish data to the client
     channel.publish('workspaces', {
       allWorkspaces:userWorkspaces,
       allMembersInWorkspace,
