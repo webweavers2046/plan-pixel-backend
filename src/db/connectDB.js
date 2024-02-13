@@ -61,8 +61,9 @@ const connectDB = async (app, callback) => {
     app.post("/add-member-to-workspace",async(req,res)=> await addMemberToWorkspace(req,res,users,workspaces))
     app.put('/updateWorkspace/:workspaceId', async (req,res) => await updateWorkspace(req,res,workspaces))
 
-    app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,workspaces))
-    app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,workspaces));
+    app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,users, workspaces))
+    //deleteWorkspace/65ca8a418670cdc7b4e8f52d/shakilahmmed8882@gmail.com
+    app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,users,workspaces));
 
 
     // Payment related API
