@@ -1,7 +1,7 @@
 const setupGlobalErrorHandling = require("../errorHandling/handleGlobalError");
 const createMongoClient = require("./CreateMongoClient");
 
-const { getAllTasks, getFilteredTasks } = require("../api/controllers/tasks/readTasks");
+const { getAllTasks, getFilteredTasks, getSingleTask } = require("../api/controllers/tasks/readTasks");
 const { getAllUsers, getSingleUser, createUser, updateUser, updateUserImage} = require("../api/controllers/users");
 const { CreateTask } = require("../api/controllers/tasks/createTask");
 const updateTaskState = require("../api/controllers/tasks/updateTask");
@@ -16,6 +16,10 @@ const getExistingActiveWrokspace = require("../api/controllers/workspace/getExis
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
 const searchMembers = require("../api/controllers/workspace/search");
+const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
+const createCardTask = require("../api/controllers/cardTasks/createCardTask");
+const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
+const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -28,6 +32,7 @@ const connectDB = async (app, callback) => {
      const tasks = client.db("planPixelDB").collection("tasks");
      const users = client.db("planPixelDB").collection("users");
      const workspaces = client.db("planPixelDB").collection("workspace");
+     const cardTasks = client.db("planPixelDB").collection("cardTasks");
       
     //  allRoutes.initializeRoutes()
      app.get("/tasks",async(req,res)=> {await getAllTasks(req,res,tasks)})
@@ -36,11 +41,19 @@ const connectDB = async (app, callback) => {
      app.get("/tasksFiltered",async (req, res) => await getFilteredTasks(req, res, tasks));
 
 
+    // Tasks of different cards related APIs
+    app.get("/cardTasks/:cardId",async (req, res) => await getCardTasks(req, res, cardTasks));
+    app.post("/createCardTask",async (req, res) => await createCardTask(req, res, cardTasks));
+    app.delete("/deleteCardTask/:id",async (req, res) => await deleteCardTask(req, res, cardTasks));
+    app.put("/updateChecked/:id",async (req, res) => await updateTaskChecked(req, res, cardTasks));
+  
+
     // Task related APIs
     app.post("/createTask/:activeWorkspaceId/:userEmail",async (req, res) => await CreateTask(req, res, users, tasks,workspaces));
     app.put("/updateTask/:id",async (req, res) => await updateTaskState(req, res, tasks));
     app.patch("/updateTaskState",async (req, res) => await updateTaskState(req, res, tasks));
     app.delete("/deleteTask/:id",async (req, res) => await deleteTask(req, res, tasks));
+    app.get("/singleTask/:id",async (req, res) => await getSingleTask(req, res, tasks));
     
       
     // User related APIs

@@ -73,7 +73,6 @@ connectDB(app, () => {
 
     const user = await usersCollection.findOne({ email: userEmail});
     await usersCollection.updateOne({email:userEmail},update)
-    
     // get user workspace field > ids then fetch them from collection
     const workspacesField = user?.workspaces || [];
     const workspaceIds = workspacesField.map((id) => new ObjectId(id));

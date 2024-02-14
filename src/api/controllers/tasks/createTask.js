@@ -21,8 +21,6 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
 
     const taskId = insertedTask.insertedId.toString();
 
-
-
     // Update tasks in the workspace
     await workspaces.updateOne({ _id: new ObjectId(activeWorkspaceId) }, { $push: { tasks: taskId } });
 

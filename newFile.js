@@ -85,7 +85,7 @@ connectDB(app, () => {
           const updatedDocumentId = changeEvent;
 
 
-          console.log(updatedDocumentId);
+          // console.log(updatedDocumentId);
 
           const allWorkspaces = await workspaceCollection.find().toArray();
           const activeWorkspace = await workspaceCollection.findOne({ isActive: true });
