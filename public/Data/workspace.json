@@ -1,24 +1,31 @@
 [
     {
-      "title": "Workspace 2",
-      "description": "Description of Workspace 2",
-      "creator": "userID2",
-      "members": ["userID2", "userID3"],
-      "tasks": []
+      "title": "PlanPixel",
+      "description": "PlanPixel is multifaced work management project aimed to to create a personalized workpsce for your organized planning and collaboration with team members seamlessly",
+      "creator": "shakilahmmed8882@gmail.com",
+      "members": [],
+      "tasks": [],
+      "isActive":false,
+      "lastModifiedBy":""
     },
+    
     {
       "title": "Workspace 2",
       "description": "Another Workspace Description",
-      "creator": "userID3",
-      "members": ["userID3", "userID4"],
-      "tasks": ["taskID1", "taskID2"]
+      "creator": "forhadairdrop@gmail.com",
+      "members": [],
+      "tasks": [],
+      "isActive":false,
+      "lastModifiedBy":""
     },
     {
-      "title": "Workspace 2",
-      "description": "Yet Another Workspace",
-      "creator": "userID4",
+      "title": "Our world",
+      "description": "World get revolutionized gradually are you adaping all with that?",
+      "creator": "ahteshamsajid8@gmail.com",
       "members": [],
-      "tasks": []
+      "tasks": [],
+      "isActive":false,
+      "lastModifiedBy":""
     }
   ]
   

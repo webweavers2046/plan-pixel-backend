@@ -1,6 +1,8 @@
+
+
 const workspaces = async (req, res, workspace) => {
     try {
-        const workspaces = await workspace.find({}, { _id: 0, title: 1 }).toArray();
+        const workspaces = await workspace.find({}, { _id: 0, title: 1,isActive:1 }).toArray();
         res.send(workspaces);
     } catch (error) {
         console.error('Error fetching workspaces:', error);

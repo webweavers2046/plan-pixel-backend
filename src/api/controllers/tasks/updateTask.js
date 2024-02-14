@@ -1,9 +1,9 @@
 const { ObjectId } = require('mongodb');
-// const isValidObjectId = require('../../../utils/isValidObjectId');
 
 const updateTask = async (req, res, taskCollection) => {
   try {
     const taskId = req.params.id;
+    console.log(taskId);
     const updatedTaskData = req.body;
 
     // Ensure taskId is a valid ObjectId
@@ -19,7 +19,6 @@ const updateTask = async (req, res, taskCollection) => {
 
     // Updating the task in the MongoDB collection
     const result = await taskCollection.updateOne(filter, update);
-
     res.send(result)
   } catch (error) {
     console.error('Error updating task:', error);
@@ -31,12 +30,15 @@ const updateTask = async (req, res, taskCollection) => {
 // Change a task's state: to-do, doing, done
 const updateTaskState = async (req, res, taskCollection) => {
   try {
-    const { id, state ,position } = req.query
+    const { id, state ,position,userEmail } = req.query
   
     // // Making sure sent id is valid
     if (!ObjectId.isValid(id)) {
       return res.status(400).json({ message: 'Invalid taskId format' });
     }
+
+    // setting all tasks isDropped false 
+    await taskCollection.updateMany({}, { $set: { isDropped: false } });
 
     // Creating query for retrieving that specific task
     const filter = { _id: new ObjectId(id) };
@@ -44,9 +46,12 @@ const updateTaskState = async (req, res, taskCollection) => {
       $set: { 
         status: state,
         updatedAt:new Date(),
-        position:parseInt(position)
+        position:parseInt(position),
+        lastModifiedBy:userEmail, 
+        isDropped:true
       }
     };
+
 
     // Updating the task in the MongoDB collection
     const updated = await taskCollection.updateOne(filter, update);

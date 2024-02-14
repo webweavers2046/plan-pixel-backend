@@ -12,9 +12,11 @@ const getAllTasks = async (req, res, tasksCollection) => {
   }
 };
 
-// Get signle task by id
+// Get single task by id
 const getSingleTask = async (req, res, tasksCollection) => {
   const id = req.params.id;
+  console.log('hitting', id);
+
   try {
     const task = await tasksCollection.findOne({
       _id: new ObjectId(id),

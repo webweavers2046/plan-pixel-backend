@@ -12,7 +12,7 @@ const client = createMongoClient();
 // Ably channel's logic
 channel.subscribe("tasks", (message) => {
   // Handle received messages
-  console.log("Received Ably message:", message.data);
+  // console.log("Received Ably message:", message.data);
 });
 
 const channel = ably.channels.get("tasks"); // Choose a channel name
@@ -29,7 +29,7 @@ const Ably = () => {
       .then(async (initialTasks) => {
         // Publish initial data
         channel.publish("tasks", initialTasks);
-        console.log(initialTasks);
+        // console.log(initialTasks);
 
         // MongoDB Change Stream to listen for changes in the tasks collection
         const changeStream = tasksCollection.watch();

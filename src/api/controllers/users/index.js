@@ -11,7 +11,7 @@ const getAllUsers = async (req, res,usersCollection) => {
   }
 };
 
-// Get signle user by id
+// Get single user by email
 const getSingleUser = async (req, res,usersCollection) => {
       const email = req.params.email
   try {
@@ -40,7 +40,7 @@ const updateUser = async (req, res, usersCollection) => {
 };
 const updateUserImage = async (req, res, usersCollection) => {
   try {
-    console.log('hitting', req.body);
+    // console.log('hitting', req.body);
     const filter = { email: req?.params?.email };
     const image = req?.body?.image;
     const updateOperation = {
@@ -61,12 +61,12 @@ const updateUserImage = async (req, res, usersCollection) => {
 
 // This file is about creating task in the database
 
-const createUser = async (req, res, tasksCollection) => {
-  const newTask = req.body;
-  console.log(newTask);
+const createUser = async (req, res, users) => {
+  const newUser = req.body;
+  console.log(newUser);
   try {
-    const insertedTask = await tasksCollection.insertOne(newTask);
-    res.send(insertedTask);
+    const insertedUser = await users.insertOne(newUser);
+    res.send(insertedUser);
   } catch (error) {
     res.status(500).send("Internal Server Error");
   }
