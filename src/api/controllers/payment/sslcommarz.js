@@ -18,6 +18,9 @@ const calculateAmount = (planName) => {
   return amount;
 };
 
+
+
+
 const sslcommarz = async (req, res, tasksCollection) => {
   try {
     const payInfo = req.body;
@@ -25,12 +28,24 @@ const sslcommarz = async (req, res, tasksCollection) => {
 
     const transId = new ObjectId().toString();
     const amount = calculateAmount(payInfo?.planName);
+
+    // all for dynamic url
+    const successUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/payment/success/${transId}`;
+    const failUrl = `${req.protocol}://${req.get(
+      "host"
+    )}/payment/failed/${transId}`;
+    const cancelUrl = `${req.protocol}://${req.get("host")}/cancel`;
+    const ipnUrl = `${req.protocol}://${req.get("host")}/ipn`;
+    // all for daynamic url
+
     const data = {
       total_amount: amount,
       currency: payInfo?.currency,
       tran_id: transId, // use unique tran_id for each api call
-      success_url: `http://localhost:50001/payment/success/${transId}`,
-      fail_url: `http://localhost:50001/payment/failed/${transId}`,
+      success_url: successUrl,
+      fail_url: `http://localhost:5000/payment/failed/${transId}`,
       cancel_url: "http://localhost:3030/cancel",
       ipn_url: "http://localhost:3030/ipn",
       shipping_method: "Courier",
@@ -90,9 +105,16 @@ const paymentSuccess = async (req, res, tasksCollection) => {
       }
     );
     if(result.modifiedCount > 0){
-      res.redirect(
-        `http://localhost:3000/payment-success/${req.params.transId}`
-      );
+      console.log('success ',app.settings.env);
+
+            const baseUrl =
+              app.settings.env === "development"
+                ? "http://localhost:3000"
+                : "https://plan-pixel.vercel.app/"; // Replace 'https://your-production-url.com' with your actual production URL
+            res.redirect(`${baseUrl}/payment-success/${req.params.transId}`);
+      // res.redirect(
+      //   `http://localhost:3000/payment-success/${req.params.transId}`
+      // );
     }
   } catch (error) {
     console.log(error);
@@ -105,9 +127,16 @@ const paymentFailed = async (req, res, tasksCollection) => {
       { transactionId: req.params.transId }
     );
     if(result.deletedCount){
-      res.redirect(
-        `http://localhost:3000/payment-failed`
-      );
+            const baseUrl =
+              app.settings.env === "development"
+                ? "http://localhost:3000"
+                : "https://plan-pixel.vercel.app/"; // Replace 'https://your-production-url.com' with your actual production URL
+
+
+            res.redirect(`${baseUrl}/payment-failed`);
+      // res.redirect(
+      //   `http://localhost:3000/payment-failed`
+      // );
     }
   } catch (error) {
     console.log(error);
