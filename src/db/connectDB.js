@@ -1,7 +1,7 @@
 const setupGlobalErrorHandling = require("../errorHandling/handleGlobalError");
 const createMongoClient = require("./CreateMongoClient");
 
-const { getAllTasks, getFilteredTasks } = require("../api/controllers/tasks/readTasks");
+const { getAllTasks, getFilteredTasks, getSingleTask } = require("../api/controllers/tasks/readTasks");
 const { getAllUsers, getSingleUser, createUser, updateUser, updateUserImage} = require("../api/controllers/users");
 const { CreateTask } = require("../api/controllers/tasks/createTask");
 const updateTaskState = require("../api/controllers/tasks/updateTask");
@@ -17,6 +17,9 @@ const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
 const searchMembers = require("../api/controllers/workspace/search");
 const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
+const createCardTask = require("../api/controllers/cardTasks/createCardTask");
+const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
+const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -40,6 +43,9 @@ const connectDB = async (app, callback) => {
 
     // Tasks of different cards related APIs
     app.get("/cardTasks/:cardId",async (req, res) => await getCardTasks(req, res, cardTasks));
+    app.post("/createCardTask",async (req, res) => await createCardTask(req, res, cardTasks));
+    app.delete("/deleteCardTask/:id",async (req, res) => await deleteCardTask(req, res, cardTasks));
+    app.put("/updateChecked/:id",async (req, res) => await updateTaskChecked(req, res, cardTasks));
   
 
     // Task related APIs
@@ -47,6 +53,7 @@ const connectDB = async (app, callback) => {
     app.put("/updateTask/:id",async (req, res) => await updateTaskState(req, res, tasks));
     app.patch("/updateTaskState",async (req, res) => await updateTaskState(req, res, tasks));
     app.delete("/deleteTask/:id",async (req, res) => await deleteTask(req, res, tasks));
+    app.get("/singleTask/:id",async (req, res) => await getSingleTask(req, res, tasks));
     
       
     // User related APIs
@@ -67,8 +74,9 @@ const connectDB = async (app, callback) => {
     app.post("/add-member-to-workspace",async(req,res)=> await addMemberToWorkspace(req,res,users,workspaces))
     app.put('/updateWorkspace/:workspaceId', async (req,res) => await updateWorkspace(req,res,workspaces))
 
-    app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,workspaces))
-    app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,workspaces));
+    app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,users, workspaces))
+    //deleteWorkspace/65ca8a418670cdc7b4e8f52d/shakilahmmed8882@gmail.com
+    app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,users,workspaces));
 
 
     // Payment related API

@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb");
 
 const addMemberToWorkspace = async (req, res, userCollection,workspaceCollection) => {
   // Extract email and workspace from the request
-  const { workspaceId, userEmail } = req.body;
+  const { workspaceId, userEmail, memberName } = req.body;
 
   try {
     // Check if the provided ID is valid
@@ -21,7 +21,7 @@ const addMemberToWorkspace = async (req, res, userCollection,workspaceCollection
     // Update the users workspaces by pushing the worksace id
     await workspaceCollection.updateOne(
       { _id: new ObjectId(workspaceId) }, // Convert workspaceId to ObjectId
-      { $push: { members: userEmail } }
+      { $push: { members: {userEmail, memberName} } }
       );
       
       // Update the workspace by pushing the new member's email
