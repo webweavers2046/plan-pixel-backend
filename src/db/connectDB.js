@@ -8,9 +8,12 @@ const updateTaskState = require("../api/controllers/tasks/updateTask");
 const deleteTask = require("../api/controllers/tasks/deleteTask");
 const getUserWorkspacesByEmail = require("../api/controllers/workspace/read-tasks");
 const activeWorkspace = require("../api/controllers/workspace/activeWorkspace");
-const { PaymentIntend } = require("../api/controllers/payment/payments");
+const { PaymentIntend } = require("../api/controllers/payment/stripe");
 const createWorkspace = require("../api/controllers/workspace");
 const addMemberToWorkspace = require("../api/controllers/workspace/addMemberToWorkspace");
+const { sslcommarz, paymentSuccess, paymentFailed } = require("../api/controllers/payment/sslcommarz");
+const { getPaymentInfo } = require("../api/controllers/payment");
+
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -23,6 +26,7 @@ const connectDB = async (app, callback) => {
      const tasks = client.db("planPixelDB").collection("tasks");
      const users = client.db("planPixelDB").collection("users");
      const workspaces = client.db("planPixelDB").collection("workspace");
+     const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
       
     //  allRoutes.initializeRoutes()
      app.get("/tasks",async(req,res)=> {await getAllTasks(req,res,tasks)})
@@ -55,7 +59,18 @@ const connectDB = async (app, callback) => {
 
 
     // Payment related API
-    app.post("/create-payment-intent",async (req, res) => await PaymentIntend(req, res));
+    app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
+    app.post(
+      "/stripePayment",
+      async (req, res) => await PaymentIntend(req, res)
+    );
+    app.post('/sslPayment',async(req,res)=>sslcommarz(req,res,paymentInfo))
+    app.post("/payment/success/:transId", async (req, res) =>
+      paymentSuccess(req, res,paymentInfo)
+    );
+    app.post("/payment/failed/:transId", async (req, res) =>
+      paymentFailed(req, res,paymentInfo)
+    );
 
 
     
