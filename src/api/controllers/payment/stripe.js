@@ -18,6 +18,11 @@ const PaymentIntend = async (req, res) => {
   const { plan } = req.body;
 
   // Create a PaymentIntent with the order amount and currency
+  if(!plan){
+    return 
+
+  }
+  console.log(plan);
   const paymentIntent = await stripe.paymentIntents.create({
     amount: calculateOrderAmount(plan),
     currency: "usd",
