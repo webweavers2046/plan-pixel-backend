@@ -53,7 +53,7 @@ const connectDB = async (app, callback) => {
     // Workspace related APIs
     // router.get("/workspaces", async (req, res) => await workspaces(req, res, workspaces));
     app.get("/userWokspaces/:userEmail",async (req, res) => await getUserWorkspacesByEmail(req, res, users,workspaces));
-    app.get("/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
+    app.get("/api/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
     app.get('/api/workspaces/active/:userEmail', async (req, res) =>await getExistingActiveWrokspace(req,res,users,workspaces))
     app.get("/api/members/search",async(req,res) => await searchMembers(req,res,users))
 

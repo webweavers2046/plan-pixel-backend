@@ -1,13 +1,13 @@
 const { ObjectId } = require("mongodb");
 
-const addMemberToWorkspace = async (req, res, userCollection,workspaceCollection) => {
+const addMemberToWorkspace = async (req, res, userCollection, workspaceCollection) => {
   // Extract email and workspace from the request
   const { workspaceId, userEmail } = req.body;
 
   try {
     // Check if the provided ID is valid
     const notValidId = !ObjectId.isValid(workspaceId);
-    if (notValidId) return res.status(404).send({ error: "Invalid id"});
+    if (notValidId) return res.status(404).send({ error: "Invalid id" });
 
     // Check if the user already exists in the workspace
     const isSameMemberExist = await workspaceCollection.findOne({
@@ -18,16 +18,17 @@ const addMemberToWorkspace = async (req, res, userCollection,workspaceCollection
     if (isSameMemberExist) {
       return res.send({ error: "User already exists in the workspace" });
     }
-    // Update the users workspaces by pushing the worksace id
+
+    // Update the users workspaces by pushing the workspace id
     await workspaceCollection.updateOne(
-      { _id: new ObjectId(workspaceId) }, // Convert workspaceId to ObjectId
-      { $push: { members: userEmail } }
-      );
-      
-      // Update the workspace by pushing the new member's email
-      const updatedWorkspace = await userCollection.updateOne(
-      { email: userEmail }, // Convert workspaceId to ObjectId
-      { $push: { workspaces: workspaceId } }
+      { _id: new ObjectId(workspaceId) },
+      { $addToSet: { members: userEmail } }
+    );
+
+    // Update the workspace by pushing the new member's email
+    const updatedWorkspace = await userCollection.updateOne(
+      { email: userEmail },
+      { $addToSet: { workspaces: workspaceId } } // Use $addToSet to add unique elements
     );
 
     // Check if the update was successful
