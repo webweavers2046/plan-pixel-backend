@@ -40,7 +40,7 @@ const updateUser = async (req, res, usersCollection) => {
 };
 const updateUserImage = async (req, res, usersCollection) => {
   try {
-    console.log('hitting', req.body);
+    // console.log('hitting', req.body);
     const filter = { email: req?.params?.email };
     const image = req?.body?.image;
     const updateOperation = {

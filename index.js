@@ -41,7 +41,6 @@ connectDB(app, () => {
       workspaceCollection = database.collection("workspace");
       usersCollection = database.collection("users");
         
- 
   // ============================== Task collection tracking =======================
   const changeStreamTasks = tasksCollection.watch();
 
