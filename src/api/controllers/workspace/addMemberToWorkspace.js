@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb");
 
 const addMemberToWorkspace = async (req, res, userCollection, workspaceCollection) => {
   // Extract email and workspace from the request
-  const { workspaceId, userEmail } = req.body;
+  const { workspaceId, userEmail, memberName } = req.body;
 
   try {
     // Check if the provided ID is valid
