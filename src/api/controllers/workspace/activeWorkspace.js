@@ -1,75 +1,44 @@
 const { ObjectId } = require("mongodb");
 
-const activeWorkspace = async (
+const getActiveWorkspace = async (
   req,
   res,
-  workspace,
+  workspaceCollection,
   tasksCollection,
   usersCollection
 ) => {
-  const { workspaceId } = req.query;
-  const { userEmail } = req.query;
-  console.log(userEmail)
-
   try {
-    if (!workspaceId) {
-      const existingActiveWorkspace = await usersCollection.findOne({email:userEmail});
-      const activeWorkspaceId = existingActiveWorkspace?.activeWorkspace
-      const activeWorkspace= await workspace.findOne({_id: new ObjectId(activeWorkspaceId)});
-     
+    // here switchActiveWorkspace is boolean true or false
+    const {switchActiveWorkspace,workspaceId, userEmail } = req.query;
 
-      const taskIdsInWorkspace = activeWorkspace?.tasks || [];
+    // if no user email provided
+    if (!userEmail) return res.send({ error: "please provide user email" });
+    
+    const user = await usersCollection.findOne({ email: userEmail });
+    const activeWorkspaceId = user?.activeWorkspace;
+    const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(activeWorkspaceId) });
 
-      // Fetch all tasks for the activated workspace using the task IDs
-      const allTasksInWorkspace = await tasksCollection
-        .find({
-          _id: { $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)) },
-        })
-        .toArray();
-      return res.send(allTasksInWorkspace);
+    // When user switch to different workspace change active workspace id
+    if(switchActiveWorkspace){
+      await usersCollection.updateOne({email:userEmail},{$set:{activeWorkspace:workspaceId}})
     }
 
-    if (!ObjectId.isValid(workspaceId)) {
-      return res.status(400).send("Not valid workspace id");
-    }
+    // Get user workspace list Ids, active workspace tasks IDs, and members Emails
+    const userWorkspaceListIDs = await user?.workspaces || [];
+    const activeWorkspaceTasksIDs = await activeWorkspace?.tasks?.map((id) => new ObjectId(id)) || [];
+    const activeWorkspaceMembersEmails = await activeWorkspace?.members?.map((member) => member) || [];
 
-    // Update all workspaces, setting isActive to false
-    await workspace.updateMany({}, { $set: { isActive: false } });
-
-    // Update the selected workspace, setting isActive to true
-    const updatedWorkspace = await workspace.findOneAndUpdate(
-      { _id: new ObjectId(workspaceId) },
-      { $set: { isActive: true } },
-      { returnDocument: "after" } // Return the updated document
-    );
-
-    if (!updatedWorkspace) {
-      return res.send("Workspace not found");
-    }
-    // Retrieve tasks IDs and members email from the workspace
-    const taskIdsInWorkspace = updatedWorkspace.tasks || [];
-    const membersEmailsInWorkspace = updatedWorkspace.members || [];
-
-    // Fetch all tasks for the activated workspace using the task IDs
-    const allTasksInWorkspace = await tasksCollection
-      .find({ _id: { $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)) } })
-      .toArray();
-
-    // Fetch all members for the activated workspace using the member emails
-    const allMembersInWorkspace = await usersCollection
-      .find({ email: { $in: membersEmailsInWorkspace?.map((user) => user) } })
-      .toArray();
+    // workspace list ,tasks ,and members,
+    const userWokspaceList = await workspaceCollection.find({ _id: { $in: userWorkspaceListIDs } }).toArray();
+    const activeWorkspaceTasks = await tasksCollection.find({ _id: { $in: activeWorkspaceTasksIDs } }).toArray();
+    const activeWorkspaceMembers = await usersCollection.find({ email: { $in: activeWorkspaceMembersEmails } }).toArray();
 
     // Send the updated workspace and all tasks back to the client
-    res.send({
-      tasks: allTasksInWorkspace,
-      members: allMembersInWorkspace,
-      updatedWorkspace,
-    });
+    res.send({ activeWorkspace, userWokspaceList, activeWorkspaceTasks, activeWorkspaceMembers });
   } catch (error) {
     console.error("Error updating workspace:", error);
     res.status(500).send("Internal Server Error");
   }
 };
 
-module.exports = activeWorkspace;
+module.exports = getActiveWorkspace;

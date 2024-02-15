@@ -1,140 +1,160 @@
-// const connectDB = require("./src/db/connectDB");
-// const express = require("express");
-// const applyMiddleWare = require("./src/middlewares/applyMiddleware");
-// const createMongoClient = require("./src/db/CreateMongoClient");
-// require("dotenv").config();
-// const port = process.env.PORT || 5000;
-// const app = express();
 
-// // Add Ably integration
-// const Ably = require("ably");
-// const { ObjectId } = require("mongodb");
-// const ably = new Ably.Realtime(process.env.ABLY_KEY);
-// const channel = ably.channels.get("tasks"); // Choose a channel name
+const connectDB = require("./src/db/connectDB");
+const express = require("express");
+const applyMiddleWare = require("./src/middlewares/applyMiddleware");
+const createMongoClient = require("./src/db/CreateMongoClient");
+require("dotenv").config();
+const port = process.env.PORT || 5000;
+const app = express();
 
-// applyMiddleWare(app);
+// Add Ably integration
+const Ably = require("ably");
+const { ObjectId } = require("mongodb");
+const ably = new Ably.Realtime(process.env.ABLY_KEY);
+const channel = ably.channels.get("tasks"); // Choose a channel name
 
-// app.get("/", (req, res) => {
-//   res.send("plan pixel successfully connected");
-// });
+// Middleware setup
+applyMiddleWare(app);
 
-// // Ably channel's logic
-// // channel.subscribe("tasks", (message) => {
-// //   // Handle received messages Received Ably message (message.data) from the client
-// //   console.log();
-// // });
+app.get("/", (req, res) => {
+  res.send("plan pixel successfully connected");
+});
 
-// // Variable to store user validity
-// let isValidUser = false;
+// MongoDB collections
+let tasksCollection;
+let workspaceCollection;
+let usersCollection;
+let lastModifiedDocumentId = ""; 
 
-// // MongoDB collections
-// let tasksCollection;
-// let workspaceCollection;
 
-// // Connect to MongoDB
-// const client = createMongoClient();
+// Connect to MongoDB
+const client = createMongoClient();
 
-// // Connect to MongoDB and set up Ably logic outside the callback
-// connectDB(app, () => {
-//   client
-//     .connect()
-//     .then(() => {
-//       console.log("Connected to MongoDB");
-//       const database = client.db("planPixelDB");
-//       tasksCollection = database.collection("tasks");
-//       workspaceCollection = database.collection("workspace");
-
-//       const workpsaceTasksArray = [];
-
-//       tasksCollection
-//         .find()
-//         .toArray()
-//         .then(async (initialTasks) => {
-//           // Publish initial data
-//           // channel.publish("tasks", initialTasks);
-//           // MongoDB Change Stream to listen for changes in the tasks collection
-
-//           const activeWorkspace = await workspaceCollection.findOne({
-//             isActive: true,
-//           });
-
-//           // checking is the user exist in the workspace or not
-//           channel.subscribe("userEmail", async (message) => {
-//             const userEmail = message.data.userEmail;
-
-//             // email validation logic
-//             const changeStreamwork = workspaceCollection.watch();
-//             changeStreamwork.on("change", async () => {
-
-//               const IsUserExistInWorkspace =
-//                 activeWorkspace?.members.includes(userEmail);
-//               // if user is the member of workspace or adming true/false
-//               isValidUser = IsUserExistInWorkspace;
-
-//               // Retrieve tasks IDs and members email from the workspace
-//               const taskIdsInWorkspace = activeWorkspace?.tasks || [];
-//               // Fetch all tasks for the activated workspace using the task IDs
-//               const allTasksInWorkspace = await tasksCollection
-//                 .find({
-//                   _id: {
-//                     $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)),
-//                   },
-//                 })
-//                 .toArray();
-//               if (isValidUser) {
-//                 isValidUser = true;
-//                 // Sorting the task based on their position and date for their vertical sequennce
-//                 const updatedTasks = await allTasksInWorkspace.sort(
-//                   (a, b) => a.position - b.position || b.updatedAt - a.updatedAt
-//                 );
-//                 workpsaceTasksArray.push(updatedTasks);
-//                 channel.publish("tasks", updatedTasks);
-//               } else {
-//                 isValidUser = false;
-//               }
-//             });
-//           });
-//         });
+// Connect to MongoDB and set up Ably logic outside the callback
+connectDB(app, () => {
+  client
+    .connect()
+    .then(() => {
+      console.log("Connected to MongoDB");
+      const database = client.db("planPixelDB");
+      tasksCollection = database.collection("tasks");
+      workspaceCollection = database.collection("workspace");
+      usersCollection = database.collection("users");
         
-        
-//  // Update the changeStream event for tasksCollection
+ // Update the changeStream event for tasksCollection
  
-//   // Update the changeStream event for tasksCollection
-//   const changeStream = tasksCollection.watch();
-//   changeStream.on("change", async () => {
-//     try {
-//       // Ensure that tasks are only published when relevant to the active workspace
-//       if (isValidUser) {
-//         const updatedTasks = await tasksCollection
-//           .find({
-//             _id: {
-//               $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)),
-//             },
-//           })
-//           .toArray();
+  // Update the changeStream event for tasksCollection
+  const changeStream = workspaceCollection.watch();
 
-//         // Sorting the tasks based on their position and date for vertical sequence
-//         const sortedTasks = updatedTasks.sort(
-//           (a, b) => a.position - b.position || b.updatedAt - a.updatedAt
-//         );
+  // publish latest task when workspace contents get modified
+  changeStream.on("change", async (changeEvent) => {
+    try {
+     
 
-//         // Publish the sorted tasks to the Ably channel
-//         channel.publish("tasks", sortedTasks);
-//       }
-//     } catch (error) {
-//       console.error("Error reloading and emitting tasks:", error);
-//     }
-//   });
+    // Check if documentId is updated
+    const updatedDocumentId = changeEvent.documentKey._id.toString();
+
+    if (updatedDocumentId) {
+      // Update the stored documentId when it changes
+      lastModifiedDocumentId = updatedDocumentId;
+    }
 
 
+    // If undefined, use the last known documentId
+    const finalDocumentId = updatedDocumentId || lastModifiedDocumentId;
+    const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(finalDocumentId)},{projection:{}});
+    const userEmail = activeWorkspace?.lastModifiedBy
+    const update = {
+      $set: {
+        lastModifiedBy: userEmail,
+        activeWorkspace: finalDocumentId,
+      }
+    };
 
-//     })
-//     .catch((error) => {
-//       console.error("Error loading initial tasks:", error);
-//     });
-// });
-// app.listen(port, () => {
-//   console.log(`Server is running on port ${port}`);
-// });
+    const user = await usersCollection.findOne({ email: userEmail});
+    await usersCollection.updateOne({email:userEmail},update)
+    
+    // get user workspace field > ids then fetch them from collection
+    const workspacesField = user?.workspaces || [];
+    const workspaceIds = workspacesField.map((id) => new ObjectId(id));
+    const userWorkspaces = await workspaceCollection.find({ _id: { $in: workspaceIds } }).toArray();
 
-// module.exports = app;
+    // Retrieve tasks IDs and members email from the workspace
+    const taskIdsInWorkspace = activeWorkspace?.tasks || [];
+    const membersEmailsInWorkspace = activeWorkspace?.members || [];
+
+
+    const allTasksInWorkspace = await tasksCollection.find({ _id: { $in: taskIdsInWorkspace?.map((id) => new ObjectId(id)) } }).toArray();
+    // Fetch all members for the activated workspace using the member emails
+    const allMembersInWorkspace = await usersCollection.find({ email: { $in: membersEmailsInWorkspace?.map((user) => user) } }).toArray();
+
+       // Publish data to the client
+    channel.publish('workspaces', {
+      allWorkspaces:userWorkspaces,
+      allMembersInWorkspace,
+      allTasksInWorkspace,
+      activeWorkspace
+    });
+    
+    } catch (error) {
+      console.error("Error reloading and emitting tasks:", error);
+    }
+  });
+
+
+  // ============================== Task collection tracking =======================
+  const changeStreamTasks = tasksCollection.watch();
+
+  // publish latest task when task collection contents get modified
+  changeStreamTasks.on("change", async (changeEvent) => {
+    try {
+      
+    // Check if documentId is updated
+    // const updatedDocumentId = changeEvent.documentKey._id.toString();
+    const updatedDocumentId = changeEvent.documentKey._id.toString();
+
+    const lastChangedId = await tasksCollection.findOne(
+      { _id: new ObjectId(updatedDocumentId) },
+      { projection: { _id:0,lastModifiedBy: 1 } }
+    );
+    
+    const userEmail = lastChangedId?.lastModifiedBy
+    const user = await usersCollection.findOne({ email: userEmail });
+    const activeWorkspace = await workspaceCollection.findOne({_id: new ObjectId(user?.activeWorkspace)}) 
+    const userWokspaceIds = await user?.workspaces?.map(id => new ObjectId(id))
+    const userWorkspaces = await workspaceCollection?.find({ _id: { $in: userWokspaceIds } }).toArray();
+    
+    const workspaceTasksIds = activeWorkspace?.tasks?.map(workspaceId => new ObjectId(workspaceId))
+    const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds } }).toArray();
+    
+    const workspaceMembersEmails = activeWorkspace?.members?.map(member => member)
+    const allMembersInWorkspace = await usersCollection?.find({ email: { $in: workspaceMembersEmails } }).toArray();
+
+
+
+
+    channel.publish('workspaces', {
+      allWorkspaces:userWorkspaces,
+      allMembersInWorkspace,
+      allTasksInWorkspace,
+      activeWorkspace
+    });
+    
+    
+    } catch (error) {
+      console.error("Error reloading and emitting tasks:", error);
+    }
+  });
+
+
+    })
+    .catch((error) => {
+      console.error("Error loading initial tasks:", error);
+    });
+});
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
+});
+
+
+module.exports = app;
