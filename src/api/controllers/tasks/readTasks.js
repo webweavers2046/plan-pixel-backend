@@ -15,7 +15,6 @@ const getAllTasks = async (req, res, tasksCollection) => {
 // Get single task by id
 const getSingleTask = async (req, res, tasksCollection) => {
   const id = req.params.id;
-  console.log('hitting', id);
 
   try {
     const task = await tasksCollection.findOne({

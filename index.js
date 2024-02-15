@@ -71,8 +71,6 @@ connectDB(app, () => {
     const allMembersInWorkspace = await usersCollection?.find({ email: { $in: workspaceMembersEmails } }).toArray();
 
 
-
-
     channel.publish('workspaces', {
       allWorkspaces:userWorkspaces,
       allMembersInWorkspace,
