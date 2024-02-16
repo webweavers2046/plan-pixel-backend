@@ -6,7 +6,8 @@
       "members": [],
       "tasks": [],
       "isActive":false,
-      "lastModifiedBy":""
+      "lastModifiedBy":"",
+      "tags":[]
     },
     
     {
@@ -16,7 +17,8 @@
       "members": [],
       "tasks": [],
       "isActive":false,
-      "lastModifiedBy":""
+      "lastModifiedBy":"",
+      "tags":[]
     },
     {
       "title": "Our world",
@@ -25,7 +27,8 @@
       "members": [],
       "tasks": [],
       "isActive":false,
-      "lastModifiedBy":""
+      "lastModifiedBy":"",
+      "tags":[]
     }
   ]
   

@@ -12,7 +12,6 @@ const getUserWorkspacesByEmail = async (req, res, users, workspace) => {
     const workspaceIds = workspacesField.map((id) => new ObjectId(id));
     const userWorkspaces = await workspace.find({ _id: { $in: workspaceIds } }).toArray();
     
-    
     // Update the lastModifiedBy field for each workspace
     for (const userWorkspace of userWorkspaces) {
       await workspace.updateOne(

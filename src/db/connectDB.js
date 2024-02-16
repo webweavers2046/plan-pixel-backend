@@ -23,6 +23,7 @@ const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
 const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
 const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
+const FilterTasks = require("../api/controllers/workspace/Filter");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -80,6 +81,8 @@ const connectDB = async (app, callback) => {
     app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,users, workspaces))
     app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,users,workspaces));
 
+    // Filter tasks APIs
+    app.post("/api/filtered-tasks", async(req,res)=> await FilterTasks(req,res,tasks))
 
     // Payment related API
     app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
