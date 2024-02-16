@@ -63,7 +63,7 @@ const updateUserImage = async (req, res, usersCollection) => {
 
 const createUser = async (req, res, users) => {
   const newUser = req.body;
-  console.log(newUser);
+  // console.log(newUser);
   try {
     const insertedUser = await users.insertOne(newUser);
     res.send(insertedUser);

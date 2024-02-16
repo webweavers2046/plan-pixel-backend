@@ -84,7 +84,7 @@ const sslcommarz = async (req, res, tasksCollection) => {
         subscriptionEndDate: null,
         transactionId: transId,
       };
-      console.log(finalPayment);
+      // console.log(finalPayment);
       const result = tasksCollection.insertOne(finalPayment);
 
       console.log("Redirecting to: ", GatewayPageURL);
