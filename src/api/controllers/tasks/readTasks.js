@@ -15,6 +15,7 @@ const getAllTasks = async (req, res, tasksCollection) => {
 // Get single task by id
 const getSingleTask = async (req, res, tasksCollection) => {
   const id = req.params.id;
+  // console.log('hitting', id);
 
   try {
     const task = await tasksCollection.findOne({
@@ -42,20 +43,13 @@ const getFilteredTasks = async (req, res, tasksCollection) => {
     // Extracting query parameters from the request
     const { targetDate, tasksOwner } = req.query;
     // Constructing the filter object based on query parameters
-    let filter = null;
-    if (targetDate) {
-      filter = {
-        "dates.startDate": { $lte: targetDate }, // Start date is less than or equal to the target date
-        "dates.dueDate": { $gt: targetDate }, // Due date is greater than or equal to the target date
-        members: { $in: [tasksOwner] }, // Filter by the specified member
-        status: "doing", //Filter by the specific tasks status
-      };
-    } else {
-      filter = {
-        members: { $in: [tasksOwner] }, // Filter by the specified member
-        status: "doing", //Filter by the specific tasks status
-      };
-    }
+    const filter = {
+      "dates.startDate": { $lte: targetDate }, // Start date is less than or equal to the target date
+      "dates.dueDate": { $gt: targetDate }, // Due date is greater than or equal to the target date
+      members: { $in: [tasksOwner] }, // Filter by the specified member
+      status:'upcoming' //Filter by the specific tasks status
+    };
+
     // Querying tasks using the provided tasksCollection and filter
     const tasks = await tasksCollection.find(filter).toArray();
 
@@ -74,3 +68,4 @@ module.exports = {
   geTaskByStats,
   getFilteredTasks,
 };
+
