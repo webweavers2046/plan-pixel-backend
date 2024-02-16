@@ -3,8 +3,9 @@ const { ObjectId } = require("mongodb");
 const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces) => {
   const newTask = req.body;
   const { userEmail, activeWorkspaceId } = req.params;
+  
+  if(!ObjectId.isValid(activeWorkspaceId)) return res.send("invalid ID")
 
-  console.log(activeWorkspaceId)
 
   try {
     // Add task into the task collection
@@ -15,10 +16,6 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
       lastModifiedBy: userEmail,
     });
 
-
-    if(!ObjectId.isValid(activeWorkspaceId)) return res.send("invalid ID")
-
-
     const taskId = insertedTask.insertedId.toString();
 
     // Update tasks in the workspace
@@ -26,7 +23,6 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
 
     // Update user document
     await usersCollection.updateOne({ email: userEmail }, { $push: { tasks: taskId }, $set: { lastModifiedBy: userEmail } });
-
     res.send(insertedTask);
   } catch (error) {
     console.error(error);

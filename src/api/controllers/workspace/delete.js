@@ -12,12 +12,13 @@ const deleteMember = async (req, res, usersCollection,workspaceCollection) => {
     _id: new ObjectId(workspaceId),
   });
 
+
+
   // Check if the requester is the creator
   if (!isCreator(userEmail, workspace?.creator)) {
-    return res
-      .status(403)
-      .json({ error: "Only the creator can delete a member" });
+    return res.json({ error: "Only the creator can delete a member" });
   }
+
 
   // delete member
   await workspaceCollection.updateOne(
@@ -33,6 +34,10 @@ const deleteMember = async (req, res, usersCollection,workspaceCollection) => {
   res.send({ message: "Successfully deleted a member" });
 };
 
+
+
+
+
 // Delete a workspae
 const deleteWorkspace = async (
   req,
@@ -44,10 +49,13 @@ const deleteWorkspace = async (
     // Get the workspaceId from the request parameters
     const { userEmail, workspaceId } = req.params;
 
+    if(!ObjectId.isValid(workspaceId)) return res.send("not valid id")
+
     // Get the creator's userId from the workspace
     const workspace = await workspaceCollection.findOne({
       _id: new ObjectId(workspaceId),
     });
+
 
     // Check if the requester is the creator
     if (!isCreator(userEmail,workspace?.creator)) {
@@ -69,6 +77,9 @@ const deleteWorkspace = async (
 
     await usersCollection.updateOne({ email: userEmail }, update);
 
+
+
+    
     res.json({ message: "Workspace deleted successfully", deletedWorkspace });
   } catch (error) {
     console.error(error);

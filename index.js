@@ -41,6 +41,7 @@ connectDB(app, () => {
       workspaceCollection = database.collection("workspace");
       usersCollection = database.collection("users");
         
+ 
   // ============================== Task collection tracking =======================
   const changeStreamTasks = tasksCollection.watch();
 
@@ -68,8 +69,6 @@ connectDB(app, () => {
     
     const workspaceMembersEmails = activeWorkspace?.members?.map(member => member)
     const allMembersInWorkspace = await usersCollection?.find({ email: { $in: workspaceMembersEmails } }).toArray();
-
-
 
 
     channel.publish('workspaces', {
