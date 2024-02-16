@@ -1,82 +1,97 @@
 [
   {
-    "taskId": 1,
-    "title": "Develop homepage",
-    "description": "Create a captivating homepage for the website.",
+    "title": "Task One",
+    "description": "This is the first dynamically generated task.",
     "dates": {
-      "startDate": "2024-02-20",
-      "dueDate": "2024-02-22"
+      "startDate": "2024-02-15",
+      "dueDate": "2024-03-01"
     },
     "priority": "High",
-    "status": "done",
-    "creator": "alamin102410@gmail.com",
-    "members": ["member1", "member2"],
-    "comments": ["Comment 1", "Comment 2"],
-    "workspace":"65c0dd24fc0a061772bae410",
-    "position":0
+    "status": "In Progress",
+    "creator": "dynamic.creator1@example.com",
+    "members": [],
+    "comments": [],
+    "workspace": "dynamicWorkspaceID1",
+    "position": 2,
+    "doingTimeStamp": "2024-02-15T10:45:00",
+    "updatedAt": "2024-02-15T14:20:00",
+    "isDropped": false,
+    "lastModifiedBy": "dynamic.lastModified1@example.com"
   },
   {
-    "taskId": 2,
-    "title": "Update navigation",
-    "description": "Enhance website navigation for a seamless user experience.",
+    "title": "Task Two",
+    "description": "This is the second dynamically generated task.",
     "dates": {
-      "startDate": "2024-02-23",
-      "dueDate": "2024-02-25"
+      "startDate": "2024-02-16",
+      "dueDate": "2024-03-02"
     },
-    "priority": "Medium",
-    "status": "upcoming",
-    "creator": "Sami@gmail.com",
-    "members": ["member2", "member3"],
-    "comments": ["Comment 3", "Comment 4"],
-    "workspace":"65c0dd24fc0a061772bae410",
-    "position":1
+    "priority": "Low",
+    "status": "To Do",
+    "creator": "dynamic.creator2@example.com",
+    "members": [],
+    "comments": [],
+    "workspace": "dynamicWorkspaceID2",
+    "position": 3,
+    "doingTimeStamp": "2024-02-16T09:30:00",
+    "updatedAt": "2024-02-16T13:15:00",
+    "isDropped": false,
+    "lastModifiedBy": "dynamic.lastModified2@example.com"
   },
   {
-    "taskId": 3,
-    "title": "Implement contact form",
-    "description": "Add a functional contact form to the website.",
+    "title": "Task Three",
+    "description": "This is the third dynamically generated task.",
     "dates": {
-      "startDate": "2024-02-26",
-      "dueDate": "2024-02-28"
-    },
-    "priority": "High",
-    "status": "to-do",
-    "creator": "Forhad@gmail.com",
-    "members": ["member1", "member3"],
-    "comments": ["Comment 5", "Comment 6"],
-    "workspace":"65c0eea5f9dac91aaf34bb6f",
-    "position":2
-  },
-  {
-    "taskId": 4,
-    "title": "Optimize images",
-    "description": "Ensure all website images are optimized for faster loading.",
-    "dates": {
-      "startDate": "2024-03-01",
+      "startDate": "2024-02-17",
       "dueDate": "2024-03-03"
     },
     "priority": "Medium",
-    "status": "doing",
-    "creator": "Sajid@gmail.com",
-    "members": ["member1", "member2", "member3"],
-    "comments": ["Comment 7", "Comment 8"],
-    "workspace":"65c0eea5f9dac91aaf34bb6f",
-    "position":3
+    "status": "Completed",
+    "creator": "dynamic.creator3@example.com",
+    "members": [],
+    "comments": [],
+    "workspace": "dynamicWorkspaceID3",
+    "position": 4,
+    "doingTimeStamp": "2024-02-17T15:00:00",
+    "updatedAt": "2024-02-17T18:45:00",
+    "isDropped": false,
+    "lastModifiedBy": "dynamic.lastModified3@example.com"
   },
   {
-    "taskId": 5,
-    "title": "Task 5",
-    "description": "Description for Task 5.",
+    "title": "Task Four",
+    "description": "This is the fourth dynamically generated task.",
     "dates": {
-      "startDate": "2024-03-04",
-      "dueDate": "2024-03-06"
+      "startDate": "2024-02-18",
+      "dueDate": "2024-03-04"
+    },
+    "priority": "High",
+    "status": "In Progress",
+    "creator": "dynamic.creator4@example.com",
+    "members": [],
+    "comments": [],
+    "workspace": "dynamicWorkspaceID4",
+    "position": 5,
+    "doingTimeStamp": "2024-02-18T11:00:00",
+    "updatedAt": "2024-02-18T15:30:00",
+    "isDropped": false,
+    "lastModifiedBy": "dynamic.lastModified4@example.com"
+  },
+  {
+    "title": "Task Five",
+    "description": "This is the fifth dynamically generated task.",
+    "dates": {
+      "startDate": "2024-02-19",
+      "dueDate": "2024-03-05"
     },
     "priority": "Low",
-    "status": "to-do",
-    "creator": "Rahim@gmail.com",
-    "members": ["member2", "member3"],
-    "comments": ["Comment 9", "Comment 10"],
-    "workspace":"65c0dd24fc0a061772bae410",
-    "position":4
+    "status": "To Do",
+    "creator": "dynamic.creator5@example.com",
+    "members": [],
+    "comments": [],
+    "workspace": "dynamicWorkspaceID5",
+    "position": 6,
+    "doingTimeStamp": "2024-02-19T08:45:00",
+    "updatedAt": "2024-02-19T12:20:00",
+    "isDropped": false,
+    "lastModifiedBy": "dynamic.lastModified5@example.com"
   }
 ]

@@ -1,18 +1,33 @@
-const getUserWorkspacesByEmail = async (req, res, workspace) => {
+const { ObjectId } = require("mongodb");
+
+const getUserWorkspacesByEmail = async (req, res, users, workspace) => {
   const { userEmail } = req.params;
 
-  try {
-    // Find workspaces where the user's email is in the members array or the creator is the user
-    const userWorkspaces = await workspace
-      .find({
-        $or: [
-          { members: { $in: [userEmail] } },
-          { creator: userEmail },
-        ],
-      })
-      .project({ title: 1 }) // Only retrieve the title field
-      .toArray();
 
+  try {
+    const user = await users.findOne({ email: userEmail });
+
+    // get user workspace field > ids then fetch them from collection
+    const workspacesField = user?.workspaces || [];
+    const workspaceIds = workspacesField.map((id) => new ObjectId(id));
+    const userWorkspaces = await workspace.find({ _id: { $in: workspaceIds } }).toArray();
+    
+    
+    // Update the lastModifiedBy field for each workspace
+    for (const userWorkspace of userWorkspaces) {
+      await workspace.updateOne(
+        { _id: userWorkspace._id }, 
+        {
+          $set: {
+            lastModifiedBy: userEmail,
+          },
+        }
+      );
+    }
+
+
+    
+    
     // Send the workspace titles back to the client
     res.json(userWorkspaces);
   } catch (error) {
