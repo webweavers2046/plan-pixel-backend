@@ -17,7 +17,6 @@ const getActiveWorkspace = async (
     const user = await usersCollection.findOne({ email: userEmail });
     const activeWorkspaceId = user?.activeWorkspace;
     const activeWorkspace = await workspaceCollection.findOne({ _id: new ObjectId(activeWorkspaceId) });
-
     // When user switch to different workspace change active workspace id
     if(switchActiveWorkspace){
       await usersCollection.updateOne({email:userEmail},{$set:{activeWorkspace:workspaceId}})
