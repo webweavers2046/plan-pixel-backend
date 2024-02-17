@@ -1,57 +1,60 @@
 const { ObjectId } = require("mongodb");
 
-const FilterTasks = async (req, res, tasksCollection) => {
-    try {
-      const { status, priority, workspace, dueDate } = req.body;
-  
-      // Constructing the filter object based on the provided criteria
-      const filter = {};
-  
-      if (status) {
-        filter.status = { $regex: new RegExp(status, 'i') };
-      }
-  
-      if (priority) {
-        filter.priority = { $regex: new RegExp(priority, 'i') };
-      }
-  
-      if (workspace) {
-        filter.workspace = { $regex: new RegExp(workspace, 'i') };
-      }
-  
-      if (dueDate) {
-        filter["dates.dueDate"] = { $regex: new RegExp(dueDate, 'i') };
-      }
-  
-      const tasks = await tasksCollection.find(filter).toArray();
-      
-      res.status(200).json(tasks);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Internal Server Error" });
-    }
-  };
+// Function to filter tasks based on specified criteria
+const FilterTasks = async (req, res, tasksCollection, usersCollection) => {
+  try {
+    const { status, priority, dueDate, workspaceId } = req.body;
+    const { userEmail } = req.params;
 
-const SetActiveWorkspaceFromFilter = async(req,res, usersCollection)=> {
+    // Check if user email is provided, return error if not
+    if (!userEmail) return res.status(400).json({ error: "Please provide user email" });
 
-  const {workspaceId,userEmail} = req?.body
-
-  console.log("----------", workspaceId,userEmail)
-    // if no user email provided
-    if (!userEmail) return res.send({ error: "please provide user email" });
-    
-    if(!ObjectId.isValid(workspaceId)) return res.send({ error: "please provide valid workspace id" });
-
-
+    // Retrieve the user and get all workspaces
     const user = await usersCollection.findOne({ email: userEmail });
-    // When user switch to different workspace change active workspace id
-    const updatedUserActiveWorkspace = await usersCollection.updateOne({email:userEmail},{$set:{activeWorkspace:workspaceId}})
+    const userWorkspaces = user.workspaces || [];
+    // Convert ObjectId instances to strings
+    const workspaceIdsAsString = userWorkspaces.map((id) => id.toString());
 
-    res.send(updatedUserActiveWorkspace)
+    // Constructing the filter object based on the provided criteria and user workspace IDs
+    const filter = { workspace: { $in: workspaceIdsAsString } };
 
-}
-  
-  module.exports = {
-    FilterTasks,
-    SetActiveWorkspaceFromFilter
+    // Applying optional filters
+    if (status) filter.status = { $regex: new RegExp(status, "i") };
+    if (priority) filter.priority = { $regex: new RegExp(priority, "i") };
+    if (workspaceId) filter.workspace = workspaceId;
+    if (dueDate) filter["dates.dueDate"] = { $regex: new RegExp(dueDate, "i") };
+
+    // Retrieve tasks based on the constructed filter
+    const tasks = await tasksCollection.find(filter).toArray();
+    res.status(200).json(tasks);
+  } catch (error) {
+    // Handle errors and send internal server error response
+    console.error(error);
+    res.status(500).json({ error: "Internal Server Error" });
   }
+};
+
+// Function to set the active workspace for a user based on the provided workspaceId
+const SetActiveWorkspaceFromFilter = async (req, res, usersCollection) => {
+  const { workspaceId, userEmail } = req?.body;
+
+  // Check if user email is provided, return error if not
+  if (!userEmail) return res.send({ error: "please provide user email" });
+
+  // Check if the provided workspaceId is a valid ObjectId, return error if not
+  if (!ObjectId.isValid(workspaceId)) return res.send({ error: "please provide valid workspace id" });
+
+  // When the user switches to a different workspace, change the active workspace id
+  const updatedUserActiveWorkspace = await usersCollection.updateOne(
+    { email: userEmail },
+    { $set: { activeWorkspace: workspaceId } }
+  );
+
+  // Send the updated user's active workspace information
+  res.send(updatedUserActiveWorkspace);
+};
+
+module.exports = {
+  FilterTasks,
+  SetActiveWorkspaceFromFilter,
+};

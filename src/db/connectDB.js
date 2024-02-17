@@ -18,7 +18,7 @@ const { getPaymentInfo } = require("../api/controllers/payment");
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
-const searchMembers = require("../api/controllers/workspace/search");
+const {searchMembers, SearchTasks} = require("../api/controllers/workspace/search");
 const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
 const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
@@ -82,7 +82,8 @@ const connectDB = async (app, callback) => {
     app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,users,workspaces));
 
     // Filter tasks APIs
-    app.post("/api/filtered-tasks", async(req,res)=> await FilterTasks(req,res,tasks))
+    app.get("/api/filter-tasks/search", async(req,res)=> await SearchTasks(req,res,tasks,users))
+    app.post("/api/filtered-tasks/:userEmail", async(req,res)=> await FilterTasks(req,res,tasks,users))
     app.post("/api/set-active-workspace-from-filter", async(req,res)=> await SetActiveWorkspaceFromFilter(req,res,users))
 
     // Payment related API
