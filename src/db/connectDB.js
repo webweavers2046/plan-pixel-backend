@@ -42,7 +42,7 @@ const connectDB = async (app, callback) => {
     //  allRoutes.initializeRoutes()
      app.get("/users",async(req,res)=> {await getAllUsers(req,res,users)})
      app.get("/tasks",async (req, res) => await getAllTasks(req, res, tasks));
-     app.get("/tasksFiltered",async (req, res) => await getFilteredTasks(req, res, tasks));
+     app.get("/tasksFiltered",async (req, res) => await getFilteredTasks(req, res, tasks,users,workspaces));
 
 
     // Tasks of different cards related APIs
