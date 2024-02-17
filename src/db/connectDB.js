@@ -18,11 +18,12 @@ const { getPaymentInfo } = require("../api/controllers/payment");
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
-const searchMembers = require("../api/controllers/workspace/search");
+const {searchMembers, SearchTasks} = require("../api/controllers/workspace/search");
 const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
 const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
 const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
+const {FilterTasks,SetActiveWorkspaceFromFilter} = require("../api/controllers/workspace/Filter");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -80,6 +81,10 @@ const connectDB = async (app, callback) => {
     app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,users, workspaces))
     app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,users,workspaces));
 
+    // Filter tasks APIs
+    app.get("/api/filter-tasks/search", async(req,res)=> await SearchTasks(req,res,tasks,users))
+    app.post("/api/filtered-tasks/:userEmail", async(req,res)=> await FilterTasks(req,res,tasks,users))
+    app.post("/api/set-active-workspace-from-filter", async(req,res)=> await SetActiveWorkspaceFromFilter(req,res,users))
 
     // Payment related API
     app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
