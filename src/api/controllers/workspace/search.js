@@ -18,7 +18,6 @@ const searchMembers = async (req, res, userCollection) => {
   }
 };
 
-
 const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
   const { query, userEmail } = req.query;
 
@@ -57,8 +56,20 @@ const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
   }
 };
 
+const saveUserSearchHistory = async(req,res,searchHistoryCollection) => {
+  const history = req.body
+  const {userEmail} = history
+  
+  await searchHistoryCollection.insertOne(history)
+  const userHistory = await searchHistoryCollection.find({userEmail}).sort({timeStamp:-1}).toArray()
+  
+  if(userHistory){
+    res.send(userHistory)
+  }
+}
 
 module.exports = {
   searchMembers,
-  SearchTasks
+  SearchTasks,
+  saveUserSearchHistory
 };

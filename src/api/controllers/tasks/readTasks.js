@@ -55,7 +55,6 @@ console.log(targetDate);
     );
 
     const activeWorkspaceId = user?.activeWorkspace.toString();
-    console.log("filterTask", activeWorkspaceId);
 
 
     // Constructing the filter object based on query
