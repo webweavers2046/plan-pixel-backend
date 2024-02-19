@@ -237,12 +237,13 @@ const connectDB = async (app, callback) => {
                 await deleteAllSearchHistory(req, res, searchHistoryCollection)
         );
 
-        // Users feedback
+        // Users feedback -----------------
         app.get(
             "/api/users-feedback",
             async (req, res) =>
                 await getAllUserFeedback(req, res, feedbackCollection)
         );
+
         // Payment related API
         app.get(
             "/paymentInfo",
