@@ -25,6 +25,10 @@ const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
 const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
 const {FilterTasks,SetActiveWorkspaceFromFilter} = require("../api/controllers/workspace/Filter");
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
+const createComment = require("../api/controllers/comments/createComment");
+const getCommentsByCardId = require("../api/controllers/comments/getCommentsByCardId");
+const deleteCommentById = require("../api/controllers/comments/deleteCommentById");
+const updateCommentById = require("../api/controllers/comments/updateCommentById");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -40,6 +44,7 @@ const connectDB = async (app, callback) => {
      const cardTasks = client.db("planPixelDB").collection("cardTasks");
      const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
      const searchHistoryCollection = client.db("planPixelDB").collection("searchHistory");
+     const comments = client.db("planPixelDB").collection("comments");
       
     //  allRoutes.initializeRoutes()
      app.get("/users",async(req,res)=> {await getAllUsers(req,res,users)})
@@ -53,6 +58,12 @@ const connectDB = async (app, callback) => {
     app.delete("/deleteCardTask/:id",async (req, res) => await deleteCardTask(req, res, cardTasks));
     app.put("/updateChecked/:id",async (req, res) => await updateTaskChecked(req, res, cardTasks));
     app.get("/api/cards/search",async(req,res) => await SearchTasks(req,res,tasks,users))
+
+    // Comments of specific cards
+    app.get("/card-comments/:cardId",async (req, res) => await getCommentsByCardId(req, res, comments));
+    app.post("/create-comment",async (req, res) => await createComment(req, res, comments));
+    app.delete("/delete-comment/:id",async (req, res) => await deleteCommentById(req, res, comments));
+    app.put("/update-comment/:id",async (req, res) => await updateCommentById(req, res, cardTasks));
 
     // Task related APIs
     app.post("/createTask/:activeWorkspaceId/:userEmail",async (req, res) => await CreateTask(req, res, users, tasks,workspaces));
