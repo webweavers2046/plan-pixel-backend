@@ -28,7 +28,7 @@ const createWorkspace = async (req, res, usersCollection, workspace) => {
 
     if (isWorkspaceInserted) {
       res.send(isWorkspaceInserted);
-      console.log(isWorkspaceInserted);
+      // console.log(isWorkspaceInserted);
     } else {
       res.status(500).send("Failed to insert workspace");
     }
