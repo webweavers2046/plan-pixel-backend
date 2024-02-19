@@ -18,7 +18,7 @@ const { getPaymentInfo } = require("../api/controllers/payment");
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
-const {searchMembers, SearchTasks, saveUserSearchHistory} = require("../api/controllers/workspace/search");
+const {searchMembers, SearchTasks, saveUserSearchHistory, getUserSearchHistory, deleteAllSearchHistory} = require("../api/controllers/workspace/search");
 const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
 const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
@@ -87,7 +87,9 @@ const connectDB = async (app, callback) => {
     app.post("/api/set-active-workspace-from-filter", async(req,res)=> await SetActiveWorkspaceFromFilter(req,res,users))
 
     // User Search History 
+    app.get("/api/user/search-history/:userEmail",async(req,res)=> await getUserSearchHistory(req,res,searchHistoryCollection))
     app.post("/api/filter-tasks/search-history",async(req,res)=> await saveUserSearchHistory(req,res,searchHistoryCollection))
+    app.delete("/api/delte/search-history",async(req,res)=> await deleteAllSearchHistory(req,res,searchHistoryCollection))
 
     // Payment related API
     app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
