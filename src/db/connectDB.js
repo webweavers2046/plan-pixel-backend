@@ -52,6 +52,7 @@ const {
 } = require("../api/controllers/workspace/Filter");
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
 const getAllUserFeedback = require("../api/controllers/feedbacks/getAllUserFeedback");
+const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedback");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -242,6 +243,11 @@ const connectDB = async (app, callback) => {
             "/api/users-feedback",
             async (req, res) =>
                 await getAllUserFeedback(req, res, feedbackCollection)
+        );
+        app.patch(
+            "/api/users-feedback/:id",
+            async (req, res) =>
+                await replyUserFeedback(req, res, feedbackCollection)
         );
 
         // Payment related API
