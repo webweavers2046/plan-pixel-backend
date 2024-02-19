@@ -1,5 +1,6 @@
 const searchMembers = async (req, res, userCollection) => {
   const { query } = req.query;
+  console.log('member', query);
 
   try {
       const regexQuery = {
@@ -30,6 +31,7 @@ const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
     const userWorkspaces = user.workspaces || [];
     // Convert ObjectId instances to strings
     const workspaceIdsAsString = userWorkspaces.map((id) => id.toString());
+    // console.log(workspaceIdsAsString);
 
     // Constructing the regex query based on title, description, and additional criteria
     const regexQuery = {
@@ -47,6 +49,7 @@ const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
     };
 
     const matchingTasks = await tasksCollection.find(regexQuery).toArray();
+    // console.log(matchingTasks);
 
 
     res.send(matchingTasks);

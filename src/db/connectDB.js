@@ -24,6 +24,7 @@ const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
 const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
 const {FilterTasks,SetActiveWorkspaceFromFilter} = require("../api/controllers/workspace/Filter");
+const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -51,7 +52,7 @@ const connectDB = async (app, callback) => {
     app.post("/createCardTask",async (req, res) => await createCardTask(req, res, cardTasks));
     app.delete("/deleteCardTask/:id",async (req, res) => await deleteCardTask(req, res, cardTasks));
     app.put("/updateChecked/:id",async (req, res) => await updateTaskChecked(req, res, cardTasks));
-  
+    app.get("/api/cards/search",async(req,res) => await SearchTasks(req,res,tasks,users))
 
     // Task related APIs
     app.post("/createTask/:activeWorkspaceId/:userEmail",async (req, res) => await CreateTask(req, res, users, tasks,workspaces));
@@ -70,6 +71,7 @@ const connectDB = async (app, callback) => {
     // Workspace related APIs
     // router.get("/workspaces", async (req, res) => await workspaces(req, res, workspaces));
     app.get("/userWokspaces/:userEmail",async (req, res) => await getUserWorkspacesByEmail(req, res, users,workspaces));
+    app.get("/single-workspace/:id",async (req, res) => await singleWorkspaceById(req, res,workspaces));
     app.get("/api/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
     app.get('/api/workspaces/active/:userEmail', async (req, res) =>await getExistingActiveWrokspace(req,res,users,workspaces))
     app.get("/api/members/search",async(req,res) => await searchMembers(req,res,users))
