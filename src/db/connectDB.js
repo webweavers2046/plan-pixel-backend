@@ -18,7 +18,7 @@ const { getPaymentInfo } = require("../api/controllers/payment");
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
-const {searchMembers, SearchTasks} = require("../api/controllers/workspace/search");
+const {searchMembers, SearchTasks, saveUserSearchHistory, getUserSearchHistory, deleteAllSearchHistory} = require("../api/controllers/workspace/search");
 const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
 const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
@@ -39,6 +39,7 @@ const connectDB = async (app, callback) => {
      const workspaces = client.db("planPixelDB").collection("workspace");
      const cardTasks = client.db("planPixelDB").collection("cardTasks");
      const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
+     const searchHistoryCollection = client.db("planPixelDB").collection("searchHistory");
       
     //  allRoutes.initializeRoutes()
      app.get("/users",async(req,res)=> {await getAllUsers(req,res,users)})
@@ -59,8 +60,6 @@ const connectDB = async (app, callback) => {
     app.patch("/updateTaskState",async (req, res) => await updateTaskState(req, res, tasks));
     app.delete("/deleteTask/:id",async (req, res) => await deleteTask(req, res, tasks));
     app.get("/singleTask/:id",async (req, res) => await getSingleTask(req, res, tasks));
-    
-    
       
     // User related APIs
     app.get("/users",async (req, res) => await getAllUsers(req, res, users));
@@ -88,6 +87,11 @@ const connectDB = async (app, callback) => {
     app.get("/api/filter-tasks/search", async(req,res)=> await SearchTasks(req,res,tasks,users))
     app.post("/api/filtered-tasks/:userEmail", async(req,res)=> await FilterTasks(req,res,tasks,users))
     app.post("/api/set-active-workspace-from-filter", async(req,res)=> await SetActiveWorkspaceFromFilter(req,res,users))
+
+    // User Search History 
+    app.get("/api/user/search-history/:userEmail",async(req,res)=> await getUserSearchHistory(req,res,searchHistoryCollection))
+    app.post("/api/filter-tasks/search-history",async(req,res)=> await saveUserSearchHistory(req,res,searchHistoryCollection))
+    app.delete("/api/delte/search-history",async(req,res)=> await deleteAllSearchHistory(req,res,searchHistoryCollection))
 
     // Payment related API
     app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
