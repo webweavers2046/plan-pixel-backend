@@ -9,9 +9,12 @@ const deleteTask = require("../api/controllers/tasks/deleteTask");
 
 const getUserWorkspacesByEmail = require("../api/controllers/workspace/read-tasks");
 const activeWorkspace = require("../api/controllers/workspace/activeWorkspace");
-const { PaymentIntend } = require("../api/controllers/payment/payments");
+const { PaymentIntend } = require("../api/controllers/payment/stripe");
 const createWorkspace = require("../api/controllers/workspace");
 const addMemberToWorkspace = require("../api/controllers/workspace/addMemberToWorkspace");
+const { sslcommarz, paymentSuccess, paymentFailed } = require("../api/controllers/payment/sslcommarz");
+const { getPaymentInfo } = require("../api/controllers/payment");
+
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const { deleteMember, deleteWorkspace } = require("../api/controllers/workspace/delete");
@@ -33,9 +36,9 @@ const connectDB = async (app, callback) => {
      const users = client.db("planPixelDB").collection("users");
      const workspaces = client.db("planPixelDB").collection("workspace");
      const cardTasks = client.db("planPixelDB").collection("cardTasks");
+     const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
       
     //  allRoutes.initializeRoutes()
-     app.get("/tasks",async(req,res)=> {await getAllTasks(req,res,tasks)})
      app.get("/users",async(req,res)=> {await getAllUsers(req,res,users)})
      app.get("/tasks",async (req, res) => await getAllTasks(req, res, tasks));
      app.get("/tasksFiltered",async (req, res) => await getFilteredTasks(req, res, tasks));
@@ -66,7 +69,7 @@ const connectDB = async (app, callback) => {
     // Workspace related APIs
     // router.get("/workspaces", async (req, res) => await workspaces(req, res, workspaces));
     app.get("/userWokspaces/:userEmail",async (req, res) => await getUserWorkspacesByEmail(req, res, users,workspaces));
-    app.get("/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
+    app.get("/api/active-workspace",async (req, res) =>await activeWorkspace(req, res, workspaces,tasks,users));
     app.get('/api/workspaces/active/:userEmail', async (req, res) =>await getExistingActiveWrokspace(req,res,users,workspaces))
     app.get("/api/members/search",async(req,res) => await searchMembers(req,res,users))
 
@@ -75,12 +78,22 @@ const connectDB = async (app, callback) => {
     app.put('/updateWorkspace/:workspaceId', async (req,res) => await updateWorkspace(req,res,workspaces))
 
     app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail",async(req,res) => await deleteMember(req,res,users, workspaces))
-    //deleteWorkspace/65ca8a418670cdc7b4e8f52d/shakilahmmed8882@gmail.com
     app.delete('/deleteWorkspace/:workspaceId/:userEmail', async (req,res) => await deleteWorkspace(req,res,users,workspaces));
 
 
     // Payment related API
-    app.post("/create-payment-intent",async (req, res) => await PaymentIntend(req, res));
+    app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
+    app.post(
+      "/stripePayment",
+      async (req, res) => await PaymentIntend(req, res)
+    );
+    app.post('/sslPayment',async(req,res)=>sslcommarz(req,res,paymentInfo))
+    app.post("/payment/success/:transId", async (req, res) =>
+      paymentSuccess(req, res,paymentInfo)
+    );
+    app.post("/payment/failed/:transId", async (req, res) =>
+      paymentFailed(req, res,paymentInfo)
+    );
 
 
     

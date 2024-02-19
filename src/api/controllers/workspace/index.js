@@ -15,17 +15,20 @@ const createWorkspace = async (req, res, usersCollection, workspace) => {
       lastModifiedBy: creatorEmail,
     });
 
-
     // User collection pushing id to the workspace array
     const newWorkspaceId = isWorkspaceInserted.insertedId;
     // Push the new workspace ID into the 'workspaces' array
     await usersCollection.updateOne(
       { email: creatorEmail },
-      { $push: { workspaces: newWorkspaceId } }
+      { $push: { workspaces: newWorkspaceId },
+      $set: { 
+        activeWorkspace: newWorkspaceId ,}
+    }
     );
 
     if (isWorkspaceInserted) {
       res.send(isWorkspaceInserted);
+      console.log(isWorkspaceInserted);
     } else {
       res.status(500).send("Failed to insert workspace");
     }

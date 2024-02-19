@@ -6,9 +6,9 @@ const getUserWorkspacesByEmail = async (req, res, users, workspace) => {
 
   try {
     const user = await users.findOne({ email: userEmail });
-  
+
     // get user workspace field > ids then fetch them from collection
-    const workspacesField = user.workspaces || [];
+    const workspacesField = user?.workspaces || [];
     const workspaceIds = workspacesField.map((id) => new ObjectId(id));
     const userWorkspaces = await workspace.find({ _id: { $in: workspaceIds } }).toArray();
     
@@ -26,6 +26,8 @@ const getUserWorkspacesByEmail = async (req, res, users, workspace) => {
     }
 
 
+    
+    
     // Send the workspace titles back to the client
     res.json(userWorkspaces);
   } catch (error) {
