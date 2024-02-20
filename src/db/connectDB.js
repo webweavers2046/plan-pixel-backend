@@ -56,6 +56,7 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
+const { saveMessageFunc, getSaveMessagesFunc } = require("../api/controllers/message");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -70,6 +71,7 @@ const connectDB = async (app, callback) => {
         const workspaces = client.db("planPixelDB").collection("workspace");
         const cardTasks = client.db("planPixelDB").collection("cardTasks");
         const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
+        const messageCollection = client.db("planPixelDB").collection("messages");
         const searchHistoryCollection = client
             .db("planPixelDB")
             .collection("searchHistory");
@@ -291,6 +293,14 @@ const connectDB = async (app, callback) => {
         );
         app.post("/payment/failed/:transId", async (req, res) =>
             paymentFailed(req, res, paymentInfo)
+        );
+
+        // users message related api
+        app.get("/message", async (req, res) =>
+          getSaveMessagesFunc(req, res, messageCollection)
+        );
+        app.post("/message", async (req, res) =>
+          saveMessageFunc(req, res, messageCollection,users)
         );
 
         if (callback) {

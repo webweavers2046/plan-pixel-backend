@@ -48,7 +48,6 @@ const getFilteredTasks = async (
   try {
     // Extracting query parameters from the request
     const { targetDate, tasksOwner, workspaceCollection } = req.query;
-console.log(targetDate);
     const user = await usersCollection.findOne(
       { email: tasksOwner },
       { projection: { _id: 0, activeWorkspace: 1 } }
