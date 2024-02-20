@@ -54,6 +54,7 @@ const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspac
 const getAllUserFeedback = require("../api/controllers/feedbacks/getAllUserFeedback");
 const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedback");
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
+const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -74,6 +75,9 @@ const connectDB = async (app, callback) => {
         const feedbackCollection = client
             .db("planPixelDB")
             .collection("feedbacks");
+        const newsletterCollection = client
+            .db("planPixelDB")
+            .collection("newsletters");
 
         //  allRoutes.initializeRoutes()
         app.get("/users", async (req, res) => {
@@ -259,6 +263,11 @@ const connectDB = async (app, callback) => {
         app.get(
             "/api/number-of-workspace",
             async (req, res) => await getTheNumberOfData(req, res, workspaces)
+        );
+
+        // Newsletter related API
+        app.get("/api/newsletters", async (req, res) =>
+            getAllNewsletterSubscribers(req, res, newsletterCollection)
         );
 
         // Payment related API
