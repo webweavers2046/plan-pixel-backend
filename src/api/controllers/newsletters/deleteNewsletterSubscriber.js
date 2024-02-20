@@ -6,7 +6,7 @@ const deleteNewsletterSubscriber = async (req, res, newsletterCollection) => {
         const result = await newsletterCollection.deleteOne({
             _id: new ObjectId(id),
         });
-        console.log(result);
+
         res.send(result);
     } catch (error) {
         console.log("Error when deleting subscriber", error);
