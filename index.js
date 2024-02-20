@@ -25,8 +25,6 @@ const { ObjectId } = require("mongodb");
 const ably = new Ably.Realtime(process.env.ABLY_KEY);
 const channel = ably.channels.get("tasks"); // Choose a channel name
 
-
-
 // Middleware setup
 applyMiddleWare(app);
 
@@ -38,7 +36,6 @@ app.get("/", (req, res) => {
 let tasksCollection;
 let workspaceCollection;
 let usersCollection;
-let lastModifiedDocumentId = "";
 
 // Connect to MongoDB
 const client = createMongoClient();
@@ -54,7 +51,7 @@ connectDB(app, () => {
       workspaceCollection = database.collection("workspace");
       usersCollection = database.collection("users");
 
-      // ============================== Task collection tracking =======================
+      // Task collection tracking
       const changeStreamTasks = tasksCollection.watch();
 
       // publish latest task when task collection contents get modified
@@ -69,6 +66,8 @@ connectDB(app, () => {
             { projection: { _id: 0, lastModifiedBy: 1 } }
           );
 
+          // getting the user email from task recently got changed
+          // then user by email > { activeWorspace: ...} & workspaaces: [ids] (userColleciton)
           const userEmail = lastChangedId?.lastModifiedBy;
           const user = await usersCollection.findOne({ email: userEmail });
           const activeWorkspace = await workspaceCollection.findOne({
@@ -81,6 +80,7 @@ connectDB(app, () => {
             ?.find({ _id: { $in: userWokspaceIds } })
             .toArray();
 
+          // filter those ids, fetch tasks matches those IDs
           const workspaceTasksIds = activeWorkspace?.tasks?.map(
             (workspaceId) => new ObjectId(workspaceId)
           );
@@ -88,6 +88,7 @@ connectDB(app, () => {
             ?.find({ _id: { $in: workspaceTasksIds } })
             .toArray();
 
+          // get members by emails involved in active workspace
           const workspaceMembersEmails = activeWorkspace?.members?.map(
             (member) => member
           );
@@ -95,12 +96,15 @@ connectDB(app, () => {
             ?.find({ email: { $in: workspaceMembersEmails } })
             .toArray();
 
+          // eventually publish in the "workspace" channnel to be recieved
           channel.publish("workspaces", {
             allWorkspaces: userWorkspaces,
             allMembersInWorkspace,
             allTasksInWorkspace,
             activeWorkspace,
           });
+
+          console.log("this is from line number 85", allTasksInWorkspace);
         } catch (error) {
           console.error("Error reloading and emitting tasks:", error);
         }
