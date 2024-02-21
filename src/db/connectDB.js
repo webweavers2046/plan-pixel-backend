@@ -1,6 +1,7 @@
 const setupGlobalErrorHandling = require("../errorHandling/handleGlobalError");
 const createMongoClient = require("./CreateMongoClient");
 
+const {getNotifications} = require("../api/controllers/notifications/getNotifications")
 const {
     getAllTasks,
     getFilteredTasks,
@@ -284,6 +285,18 @@ const connectDB = async (app, callback) => {
         app.delete("/api/newsletters/:id", async (req, res) =>
             deleteNewsletterSubscriber(req, res, newsletterCollection)
         );
+
+        // Notification Realated APIS
+        app.get("/api/notifications/:activeWorkspaceId", async(req, res) => getNotifications(req, res, workspaces)
+        );
+
+
+
+
+
+
+
+
 
         // Payment related API
         app.get(
