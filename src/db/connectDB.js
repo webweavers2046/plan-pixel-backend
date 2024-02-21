@@ -51,9 +51,15 @@ const {
     SetActiveWorkspaceFromFilter,
 } = require("../api/controllers/workspace/Filter");
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
+const createComment = require("../api/controllers/comments/createComment");
+const getCommentsByCardId = require("../api/controllers/comments/getCommentsByCardId");
+const deleteCommentById = require("../api/controllers/comments/deleteCommentById");
+const updateCommentById = require("../api/controllers/comments/updateCommentById");
 const getAllUserFeedback = require("../api/controllers/feedbacks/getAllUserFeedback");
 const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedback");
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
+const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
+const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -74,6 +80,10 @@ const connectDB = async (app, callback) => {
         const feedbackCollection = client
             .db("planPixelDB")
             .collection("feedbacks");
+        const newsletterCollection = client
+            .db("planPixelDB")
+            .collection("newsletters");
+     const comments = client.db("planPixelDB").collection("comments");
 
         //  allRoutes.initializeRoutes()
         app.get("/users", async (req, res) => {
@@ -110,6 +120,12 @@ const connectDB = async (app, callback) => {
             "/api/cards/search",
             async (req, res) => await SearchTasks(req, res, tasks, users)
         );
+
+    // Comments of specific cards
+    app.get("/card-comments/:cardId",async (req, res) => await getCommentsByCardId(req, res, comments));
+    app.post("/create-comment",async (req, res) => await createComment(req, res, comments));
+    app.delete("/delete-comment/:id",async (req, res) => await deleteCommentById(req, res, comments));
+    app.put("/update-comment/:id",async (req, res) => await updateCommentById(req, res, comments));
 
         // Task related APIs
         app.post(
@@ -259,6 +275,14 @@ const connectDB = async (app, callback) => {
         app.get(
             "/api/number-of-workspace",
             async (req, res) => await getTheNumberOfData(req, res, workspaces)
+        );
+
+        // Newsletter related API
+        app.get("/api/newsletters", async (req, res) =>
+            getAllNewsletterSubscribers(req, res, newsletterCollection)
+        );
+        app.delete("/api/newsletters/:id", async (req, res) =>
+            deleteNewsletterSubscriber(req, res, newsletterCollection)
         );
 
         // Payment related API
