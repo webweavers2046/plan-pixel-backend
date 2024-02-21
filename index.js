@@ -25,8 +25,6 @@ let tasksCollection;
 let workspaceCollection;
 let usersCollection;
 
-
-
 // Connect to MongoDB
 const client = createMongoClient();
 
@@ -82,7 +80,6 @@ connectDB(app, () => {
       activeWorkspace
     });
     
-    console.log("this is from line number 85", allTasksInWorkspace)
     
     } catch (error) {
       console.error("Error reloading and emitting tasks:", error);

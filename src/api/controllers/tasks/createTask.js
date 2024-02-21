@@ -30,6 +30,15 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
   }
 };
 
+
+// Archived tasks
+const archivedTasks = async (req,res,archivedTasksCollection) => {
+  console.log("i am archivedTasks")
+}
+
+
+
 module.exports = {
   CreateTask,
+  archivedTasks
 };
