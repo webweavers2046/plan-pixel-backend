@@ -6,7 +6,6 @@ const getNotifications = async (req, res, workspaces) => {
 
     try {
       const workspace = await workspaces.findOne({ _id: new ObjectId(workspaceId) });
-      console.log(workspace);
       res.send(workspace?.notifications);
     } catch (error) {
       res.status(500).send("Internal Server Error");

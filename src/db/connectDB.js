@@ -62,6 +62,7 @@ const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
 const { createNotifications } = require("../api/controllers/notifications/createNotifications");
+const { createTaskLabel } = require("../api/controllers/tasksLabel/createTaskLabel");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -298,6 +299,12 @@ const connectDB = async (app, callback) => {
         // Notifications Update API
         app.put("/api/updateNotifications/:activeWorkspaceId", async(req, res) => createNotifications(req, res, workspaces)
         );
+
+
+
+        // Task Label Related APIs
+        // Task Get related API
+        app.get("/api/tasksLabel/:tasksId", async(req, res)=> createTaskLabel(req, res, cardTasks))
 
 
 
