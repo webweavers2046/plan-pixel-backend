@@ -61,6 +61,7 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
+const { createNotifications } = require("../api/controllers/notifications/createNotifications");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -287,7 +288,15 @@ const connectDB = async (app, callback) => {
         );
 
         // Notification Realated APIS
+
+
+        // Notifications Get API
         app.get("/api/notifications/:activeWorkspaceId", async(req, res) => getNotifications(req, res, workspaces)
+        );
+
+
+        // Notifications Update API
+        app.put("/api/updateNotifications/:activeWorkspaceId", async(req, res) => createNotifications(req, res, workspaces)
         );
 
 
