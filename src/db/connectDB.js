@@ -293,6 +293,9 @@ const connectDB = async (app, callback) => {
         app.get("/api/articles", async (req, res) =>
             getAllArticle(req, res, articleCollection)
         );
+        app.delete("/api/articles/:id", async (req, res) =>
+            deleteArticle(req, res, articleCollection)
+        );
 
         // Payment related API
         app.get(
