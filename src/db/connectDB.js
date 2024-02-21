@@ -270,6 +270,9 @@ const connectDB = async (app, callback) => {
         app.get("/api/newsletters", async (req, res) =>
             getAllNewsletterSubscribers(req, res, newsletterCollection)
         );
+        app.post("/api/newsletters", async (req, res) =>
+            getAllNewsletterSubscribers(req, res, newsletterCollection)
+        );
         app.delete("/api/newsletters/:id", async (req, res) =>
             deleteNewsletterSubscriber(req, res, newsletterCollection)
         );
