@@ -32,13 +32,52 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
 
 
 // Archived tasks
-const archivedTasks = async (req,res,archivedTasksCollection) => {
-  console.log("i am archivedTasks")
-}
+const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollection) => {
+  const archiveData = req.body;
+  const singleTaskId = archiveData?.taskId;
+  const {wantToArchive} = req?.query
 
 
+  // archiving logics 
+  if(wantToArchive){
+    if (Array.isArray(archiveData)) {
+      // Update multiple tasks
+      const arrayOfStringTaskIds = archiveData.map((archiveTask) => archiveTask?.taskId);
+      const taskIdsInMongoDBFormat = arrayOfStringTaskIds?.map((id) => new ObjectId(id));
+      const result = await taskCollection.updateMany(
+        { _id: { $in: taskIdsInMongoDBFormat } },
+        { $set: { archived: true } }
+      );
+  
+      if (result.modifiedCount > 0) {
+        // Insert archived tasks
+        const result = await archivedTasksCollection.insertMany(archiveData);
+        console.log(result);
+      }
+    }
+  
+    // Logic for archiving a single task
+    if (singleTaskId) {
+      const result = await taskCollection.updateOne(
+        { _id: new ObjectId(singleTaskId) },
+        { $set: { archived: true } }
+      );
+  
+      if (result.modifiedCount > 0) {
+        // Insert archived task
+        const result = await archivedTasksCollection.insertOne(archiveData);
+        console.log(result);
+      }
+    }
+    
+  }
+
+
+  // unarchiving logics
+
+};
 
 module.exports = {
   CreateTask,
-  archivedTasks
+  createArchiveTasks
 };

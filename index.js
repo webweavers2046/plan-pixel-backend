@@ -61,11 +61,16 @@ connectDB(app, () => {
     const userEmail = lastChangedId?.lastModifiedBy
     const user = await usersCollection.findOne({ email: userEmail });
     const activeWorkspace = await workspaceCollection.findOne({_id: new ObjectId(user?.activeWorkspace)}) 
+
     const userWokspaceIds = await user?.workspaces?.map(id => new ObjectId(id))
+
+    // if user has no workspace then don't do anything
+    if(!Array.isArray(userWokspaceIds)) return;
     const userWorkspaces = await workspaceCollection?.find({ _id: { $in: userWokspaceIds } }).toArray();
     
     // filter those ids, fetch tasks matches those IDs
     const workspaceTasksIds = activeWorkspace?.tasks?.map(workspaceId => new ObjectId(workspaceId))
+    if(!Array.isArray(workspaceTasksIds)) return;
     const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds } }).toArray();
     
     // get members by emails involved in active workspace

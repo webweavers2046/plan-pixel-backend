@@ -21,7 +21,7 @@ const {
 } = require("../api/controllers/users");
 
 // Tasks Controllers
-const { CreateTask } = require("../api/controllers/tasks/createTask");
+const { CreateTask, createArchiveTasks } = require("../api/controllers/tasks/createTask");
 const updateTaskState = require("../api/controllers/tasks/updateTask");
 const deleteTask = require("../api/controllers/tasks/deleteTask");
 
@@ -101,6 +101,7 @@ const connectDB = async (app, callback) => {
         const feedbackCollection = client.db("planPixelDB").collection("feedbacks");
         const newsletterCollection = client.db("planPixelDB").collection("newsletters");
         const comments = client.db("planPixelDB").collection("comments");
+        const archivedTasks = client.db("planPixelDB").collection("ArchivedTasks");
 
         // users related APIs
         app.get("/users", async (req, res) => await getAllUsers(req, res, users));
@@ -145,6 +146,9 @@ const connectDB = async (app, callback) => {
         app.put("/updateWorkspace/:workspaceId", async (req, res) => await updateWorkspace(req, res, workspaces));
         app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail", async (req, res) => await deleteMember(req, res, users, workspaces));
         app.delete("/deleteWorkspace/:workspaceId/:userEmail", async (req, res) => await deleteWorkspace(req, res, users, workspaces));
+
+        //Archive tasks APIs
+        app.post("/api/tasks/archive",async(req,res)=> await createArchiveTasks(req,res,tasks,archivedTasks)) 
 
         // Filter tasks APIs
         app.get("/api/filter-tasks/search", async (req, res) => await SearchTasks(req, res, tasks, users));
