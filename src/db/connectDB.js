@@ -56,6 +56,8 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
+const addArticle = require("../api/controllers/articles/addArticle");
+const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -79,6 +81,9 @@ const connectDB = async (app, callback) => {
         const newsletterCollection = client
             .db("planPixelDB")
             .collection("newsletters");
+        const articleCollection = client
+            .db("planPixelDB")
+            .collection("articles");
 
         //  allRoutes.initializeRoutes()
         app.get("/users", async (req, res) => {
@@ -256,7 +261,7 @@ const connectDB = async (app, callback) => {
                 await replyUserFeedback(req, res, feedbackCollection)
         );
 
-        // Number of data
+        // Number of data -----------------
         app.get(
             "/api/number-of-users",
             async (req, res) => await getTheNumberOfData(req, res, users)
@@ -266,15 +271,19 @@ const connectDB = async (app, callback) => {
             async (req, res) => await getTheNumberOfData(req, res, workspaces)
         );
 
-        // Newsletter related API
+        // Newsletter related API ----------
         app.get("/api/newsletters", async (req, res) =>
             getAllNewsletterSubscribers(req, res, newsletterCollection)
         );
         app.post("/api/newsletters", async (req, res) =>
-            getAllNewsletterSubscribers(req, res, newsletterCollection)
+            addNewsletterData(req, res, newsletterCollection)
         );
         app.delete("/api/newsletters/:id", async (req, res) =>
             deleteNewsletterSubscriber(req, res, newsletterCollection)
+        );
+        // Article related API ------------
+        app.post("/api/articles", async (req, res) =>
+            addArticle(req, res, articleCollection)
         );
 
         // Payment related API
