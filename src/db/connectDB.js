@@ -25,6 +25,9 @@ const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
 const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
 const {FilterTasks,SetActiveWorkspaceFromFilter} = require("../api/controllers/workspace/Filter");
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
+const { createMeeting } = require("../api/controllers/meetings/createMeeting");
+const { getMeeting } = require("../api/controllers/meetings/getMeeting");
+const { deleteMeeting } = require("../api/controllers/meetings/deleteMeeting");
 
 const connectDB = async (app, callback) => {
   // Required client for the connection
@@ -39,6 +42,7 @@ const connectDB = async (app, callback) => {
      const workspaces = client.db("planPixelDB").collection("workspace");
      const cardTasks = client.db("planPixelDB").collection("cardTasks");
      const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
+     const meeting = client.db("planPixelDB").collection("meetings");
       
     //  allRoutes.initializeRoutes()
      app.get("/users",async(req,res)=> {await getAllUsers(req,res,users)})
@@ -88,6 +92,13 @@ const connectDB = async (app, callback) => {
     app.get("/api/filter-tasks/search", async(req,res)=> await SearchTasks(req,res,tasks,users))
     app.post("/api/filtered-tasks/:userEmail", async(req,res)=> await FilterTasks(req,res,tasks,users))
     app.post("/api/set-active-workspace-from-filter", async(req,res)=> await SetActiveWorkspaceFromFilter(req,res,users))
+
+    // Meeting related API
+    app.get("/api/meetings", async(req, res) =>await getMeeting(req, res, meeting) )
+    app.post("/api/meetings", async(req, res) =>await createMeeting(req, res, meeting) )
+    app.delete("/api/meetings/:id", async(req, res) =>await deleteMeeting(req, res, meeting) )
+
+
 
     // Payment related API
     app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
