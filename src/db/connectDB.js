@@ -58,6 +58,7 @@ const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getA
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
 const addArticle = require("../api/controllers/articles/addArticle");
 const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
+const getAllArticle = require("../api/controllers/articles/getAllArticle");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -267,6 +268,10 @@ const connectDB = async (app, callback) => {
             async (req, res) => await getTheNumberOfData(req, res, users)
         );
         app.get(
+            "/api/number-of-premium-user",
+            async (req, res) => await getTheNumberOfData(req, res, paymentInfo)
+        );
+        app.get(
             "/api/number-of-workspace",
             async (req, res) => await getTheNumberOfData(req, res, workspaces)
         );
@@ -284,6 +289,9 @@ const connectDB = async (app, callback) => {
         // Article related API ------------
         app.post("/api/articles", async (req, res) =>
             addArticle(req, res, articleCollection)
+        );
+        app.get("/api/articles", async (req, res) =>
+            getAllArticle(req, res, articleCollection)
         );
 
         // Payment related API
