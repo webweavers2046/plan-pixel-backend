@@ -1,3 +1,5 @@
+// archive task, create task
+
 const { ObjectId } = require("mongodb");
 
 const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces) => {
@@ -30,52 +32,96 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
   }
 };
 
-
 // Archived tasks
 const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollection) => {
   const archiveData = req.body;
   const singleTaskId = archiveData?.taskId;
-  const {wantToArchive} = req?.query
+  const isArchive = req?.query?.isArchive;
 
-
-  // archiving logics 
-  if(wantToArchive){
-    if (Array.isArray(archiveData)) {
-      // Update multiple tasks
-      const arrayOfStringTaskIds = archiveData.map((archiveTask) => archiveTask?.taskId);
-      const taskIdsInMongoDBFormat = arrayOfStringTaskIds?.map((id) => new ObjectId(id));
-      const result = await taskCollection.updateMany(
-        { _id: { $in: taskIdsInMongoDBFormat } },
-        { $set: { archived: true } }
-      );
+  try {
+    if (isArchive) {
+      if (Array.isArray(archiveData)) {
+        //send req [{"taskId": ""},task:""]
+        // Update multiple tasks
+        const arrayOfStringTaskIds = archiveData.map((archiveTask) => archiveTask?.taskId);
+        const taskIdsInMongoDBFormat = arrayOfStringTaskIds?.map((id) => new ObjectId(id));
+        
+        // Update all tasks with specified IDs to set archived: true
+        const result = await taskCollection.updateMany(
+          { _id: { $in: taskIdsInMongoDBFormat } },
+          { $set: { archived: true } }
+          );
   
-      if (result.modifiedCount > 0) {
-        // Insert archived tasks
-        const result = await archivedTasksCollection.insertMany(archiveData);
-        console.log(result);
+        if (result.modifiedCount > 0) {
+          // Insert archived tasks
+          const result = await archivedTasksCollection.insertMany(archiveData);
+          console.log("wantToArchive multiple", result);
+          return res.send(result);
+        }
       }
-    }
   
-    // Logic for archiving a single task
-    if (singleTaskId) {
-      const result = await taskCollection.updateOne(
-        { _id: new ObjectId(singleTaskId) },
-        { $set: { archived: true } }
-      );
+      // Logic for archiving a single task
+      if (singleTaskId) {
+        // send reqest {"taskId": ""}
+        // Update the specified task to set archived: true
+        const result = await taskCollection.updateOne(
+          { _id: new ObjectId(singleTaskId) },
+          { $set: { archived: true } }
+        );
   
-      if (result.modifiedCount > 0) {
-        // Insert archived task
-        const result = await archivedTasksCollection.insertOne(archiveData);
-        console.log(result);
+        if (result.modifiedCount === 1) {
+          // Insert archived task
+          const result = await archivedTasksCollection.insertOne(archiveData);
+          return res.send(result);
+        }
       }
-    }
+    } else{
+      // Unarchiving logics
+      if (Array.isArray(archiveData?.taskIds)) {
+        // User sends: {"taskIds": ["id1", "id2"]}
+        // Convert string IDs to ObjectId() and update archived to false 
+        const unarchiveStringTaskIds = archiveData?.taskIds?.map((unarchiveTaskId) => unarchiveTaskId);
+        const unarchiveMongodbFormatIds = unarchiveStringTaskIds?.map((id) => new ObjectId(id));
     
+        // Update tasks with specified IDs to set archived: false
+        const result = await taskCollection.updateMany(
+          { _id: { $in: unarchiveMongodbFormatIds } },
+          { $set: { archived: false } }
+        );
+    
+        if (result.modifiedCount > 0) {
+          // Once main task collection updated with archived: false 
+          // Delete those archive history from the archivedTasksCollection
+          const result = await archivedTasksCollection.deleteMany({ taskId: { $in: unarchiveStringTaskIds } });
+          return res.send(result);
+        }
+      }
+    
+      // Logic for unarchiving a single task
+      if (singleTaskId) {
+
+        // Update the specified task to set archived: false
+        const result = await taskCollection.updateOne(
+          { _id: new ObjectId(singleTaskId) },
+          { $set: { archived: false } }
+        );
+    
+        if (result.modifiedCount > 0) {
+          // Delete archived task
+          const result = await archivedTasksCollection.deleteOne(archiveData);
+          
+          return res.send(result);
+        }
+      }
+  
+    }    
+  } catch (error) {
+    console.log(error)
   }
 
 
-  // unarchiving logics
-
 };
+
 
 module.exports = {
   CreateTask,

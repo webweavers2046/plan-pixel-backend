@@ -9,6 +9,7 @@ const {
   getAllTasks,
   getFilteredTasks,
   getSingleTask,
+  getAllArchivedTasks,
 } = require("../api/controllers/tasks/readTasks");
 
 // Users Controllers
@@ -148,6 +149,7 @@ const connectDB = async (app, callback) => {
         app.delete("/deleteWorkspace/:workspaceId/:userEmail", async (req, res) => await deleteWorkspace(req, res, users, workspaces));
 
         //Archive tasks APIs
+        app.get("/api/read/archive-tasks",async(req,res)=> await getAllArchivedTasks(req,res,archivedTasks)) 
         app.post("/api/tasks/archive",async(req,res)=> await createArchiveTasks(req,res,tasks,archivedTasks)) 
 
         // Filter tasks APIs

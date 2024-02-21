@@ -71,7 +71,7 @@ connectDB(app, () => {
     // filter those ids, fetch tasks matches those IDs
     const workspaceTasksIds = activeWorkspace?.tasks?.map(workspaceId => new ObjectId(workspaceId))
     if(!Array.isArray(workspaceTasksIds)) return;
-    const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds } }).toArray();
+    const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds },archived:false}).toArray();
     
     // get members by emails involved in active workspace
     const workspaceMembersEmails = activeWorkspace?.members?.map(member => member)
