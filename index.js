@@ -24,7 +24,7 @@ app.get("/", (req, res) => {
 let tasksCollection;
 let workspaceCollection;
 let usersCollection;
-let lastModifiedDocumentId = ""; 
+
 
 
 // Connect to MongoDB
@@ -42,7 +42,7 @@ connectDB(app, () => {
       usersCollection = database.collection("users");
         
  
-  // ============================== Task collection tracking =======================
+  // Task collection tracking 
   const changeStreamTasks = tasksCollection.watch();
 
   // publish latest task when task collection contents get modified
@@ -58,19 +58,23 @@ connectDB(app, () => {
       { projection: { _id:0,lastModifiedBy: 1 } }
     );
     
+    // getting the user email from task recently got changed
+    // then user by email > { activeWorspace: ...} & workspaaces: [ids] (userColleciton)
     const userEmail = lastChangedId?.lastModifiedBy
     const user = await usersCollection.findOne({ email: userEmail });
     const activeWorkspace = await workspaceCollection.findOne({_id: new ObjectId(user?.activeWorkspace)}) 
     const userWokspaceIds = await user?.workspaces?.map(id => new ObjectId(id))
     const userWorkspaces = await workspaceCollection?.find({ _id: { $in: userWokspaceIds } }).toArray();
     
+    // filter those ids, fetch tasks matches those IDs
     const workspaceTasksIds = activeWorkspace?.tasks?.map(workspaceId => new ObjectId(workspaceId))
     const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds } }).toArray();
     
+    // get members by emails involved in active workspace
     const workspaceMembersEmails = activeWorkspace?.members?.map(member => member)
     const allMembersInWorkspace = await usersCollection?.find({ email: { $in: workspaceMembersEmails } }).toArray();
 
-
+    // eventually publish in the "workspace" channnel to be recieved
     channel.publish('workspaces', {
       allWorkspaces:userWorkspaces,
       allMembersInWorkspace,
@@ -78,12 +82,12 @@ connectDB(app, () => {
       activeWorkspace
     });
     
+    console.log("this is from line number 85", allTasksInWorkspace)
     
     } catch (error) {
       console.error("Error reloading and emitting tasks:", error);
     }
   });
-
 
     })
     .catch((error) => {

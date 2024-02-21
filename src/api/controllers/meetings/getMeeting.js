@@ -7,6 +7,4 @@ const getMeeting = async (req, res, meetingCollection) =>{
       }
 }
 
-module.exports ={
-    getMeeting
-}
+module.exports = getMeeting;

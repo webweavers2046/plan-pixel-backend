@@ -19,7 +19,6 @@ const searchMembers = async (req, res, userCollection) => {
   }
 };
 
-
 const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
   const { query, userEmail } = req.query;
 
@@ -60,8 +59,45 @@ const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
   }
 };
 
+const saveUserSearchHistory = async(req,res,searchHistoryCollection) => {
+
+  try {
+    const history = req.body
+    await searchHistoryCollection.insertOne(history)
+    
+  } catch (error) {
+    console.log(error)
+  }
+  
+}
+
+const getUserSearchHistory = async(req,res,searchHistoryCollection) => {
+  try {
+    const {userEmail} = req.params
+    const userHistory = await searchHistoryCollection.find({userEmail}).sort({sortByDate:-1}).toArray()
+  if(userHistory){
+    res.send(userHistory)
+  }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+const deleteAllSearchHistory = async(req,res,searchHistoryCollection) => {
+  try {
+    const deltedHistory = await searchHistoryCollection.deleteMany()
+    if(deltedHistory){
+      res.send(deltedHistory)
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 module.exports = {
   searchMembers,
-  SearchTasks
+  SearchTasks,
+  saveUserSearchHistory,
+  getUserSearchHistory,
+  deleteAllSearchHistory
 };

@@ -14,6 +14,5 @@ const createMeeting = async (req, res, meetingCollection) => {
   }
 };
 
-module.exports = {
-  createMeeting,
-};
+module.exports =  createMeeting;
+
