@@ -52,10 +52,6 @@ const {
     SetActiveWorkspaceFromFilter,
 } = require("../api/controllers/workspace/Filter");
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
-const createComment = require("../api/controllers/comments/createComment");
-const getCommentsByCardId = require("../api/controllers/comments/getCommentsByCardId");
-const deleteCommentById = require("../api/controllers/comments/deleteCommentById");
-const updateCommentById = require("../api/controllers/comments/updateCommentById");
 const getAllUserFeedback = require("../api/controllers/feedbacks/getAllUserFeedback");
 const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedback");
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
@@ -64,6 +60,12 @@ const deleteNewsletterSubscriber = require("../api/controllers/newsletters/delet
 const { createNotifications } = require("../api/controllers/notifications/createNotifications");
 const { createTaskLabel } = require("../api/controllers/tasksLabel/createTaskLabel");
 const { readTaskLabel } = require("../api/controllers/tasksLabel/readTaskLabel");
+const getMeeting = require("../api/controllers/meetings/getMeeting");
+const createMeeting = require("../api/controllers/meetings/createMeeting");
+const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
+const addArticle = require("../api/controllers/articles/addArticle");
+const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
+const getAllArticle = require("../api/controllers/articles/getAllArticle");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -87,7 +89,11 @@ const connectDB = async (app, callback) => {
         const newsletterCollection = client
             .db("planPixelDB")
             .collection("newsletters");
-     const comments = client.db("planPixelDB").collection("comments");
+        const comments = client.db("planPixelDB").collection("comments");
+        const meeting = client.db("planPixelDB").collection("meetings");
+        const articleCollection = client
+            .db("planPixelDB")
+            .collection("articles");
 
         //  allRoutes.initializeRoutes()
         app.get("/users", async (req, res) => {
@@ -125,11 +131,23 @@ const connectDB = async (app, callback) => {
             async (req, res) => await SearchTasks(req, res, tasks, users)
         );
 
-    // Comments of specific cards
-    app.get("/card-comments/:cardId",async (req, res) => await getCommentsByCardId(req, res, comments));
-    app.post("/create-comment",async (req, res) => await createComment(req, res, comments));
-    app.delete("/delete-comment/:id",async (req, res) => await deleteCommentById(req, res, comments));
-    app.put("/update-comment/:id",async (req, res) => await updateCommentById(req, res, comments));
+        // Comments of specific cards
+        app.get(
+            "/card-comments/:cardId",
+            async (req, res) => await getCommentsByCardId(req, res, comments)
+        );
+        app.post(
+            "/create-comment",
+            async (req, res) => await createComment(req, res, comments)
+        );
+        app.delete(
+            "/delete-comment/:id",
+            async (req, res) => await deleteCommentById(req, res, comments)
+        );
+        app.put(
+            "/update-comment/:id",
+            async (req, res) => await updateCommentById(req, res, comments)
+        );
 
         // Task related APIs
         app.post(
@@ -271,19 +289,26 @@ const connectDB = async (app, callback) => {
                 await replyUserFeedback(req, res, feedbackCollection)
         );
 
-        // Number of data
+        // Number of data -----------------
         app.get(
             "/api/number-of-users",
             async (req, res) => await getTheNumberOfData(req, res, users)
+        );
+        app.get(
+            "/api/number-of-premium-user",
+            async (req, res) => await getTheNumberOfData(req, res, paymentInfo)
         );
         app.get(
             "/api/number-of-workspace",
             async (req, res) => await getTheNumberOfData(req, res, workspaces)
         );
 
-        // Newsletter related API
+        // Newsletter related API ----------
         app.get("/api/newsletters", async (req, res) =>
             getAllNewsletterSubscribers(req, res, newsletterCollection)
+        );
+        app.post("/api/newsletters", async (req, res) =>
+            addNewsletterData(req, res, newsletterCollection)
         );
         app.delete("/api/newsletters/:id", async (req, res) =>
             deleteNewsletterSubscriber(req, res, newsletterCollection)
@@ -305,7 +330,7 @@ const connectDB = async (app, callback) => {
 
         // Task Label Related APIs
         // Task Get related API
-        app.get("/api/tasksLabel/:tasksId", async(req, res)=> readTaskLabelTaskLabel(req, res, cardTasks))
+        app.get("/api/tasksLabel/:tasksId", async(req, res)=> readTaskLabel(req, res, cardTasks))
 
 
 
@@ -314,6 +339,30 @@ const connectDB = async (app, callback) => {
 
 
 
+
+        // Meeting related API
+        app.get(
+            "/api/meetings",
+            async (req, res) => await getMeeting(req, res, meeting)
+        );
+        app.post(
+            "/api/meetings",
+            async (req, res) => await createMeeting(req, res, meeting)
+        );
+        app.delete(
+            "/api/meetings/:id",
+            async (req, res) => await deleteMeeting(req, res, meeting)
+        );
+        // Article related API ------------
+        app.post("/api/articles", async (req, res) =>
+            addArticle(req, res, articleCollection)
+        );
+        app.get("/api/articles", async (req, res) =>
+            getAllArticle(req, res, articleCollection)
+        );
+        app.delete("/api/articles/:id", async (req, res) =>
+            deleteArticle(req, res, articleCollection)
+        );
 
         // Payment related API
         app.get(
