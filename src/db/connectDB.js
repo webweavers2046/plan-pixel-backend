@@ -56,6 +56,9 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
+const getMeeting = require("../api/controllers/meetings/getMeeting");
+const createMeeting = require("../api/controllers/meetings/createMeeting");
+const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
 const addArticle = require("../api/controllers/articles/addArticle");
 const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
 const getAllArticle = require("../api/controllers/articles/getAllArticle");
@@ -82,6 +85,8 @@ const connectDB = async (app, callback) => {
         const newsletterCollection = client
             .db("planPixelDB")
             .collection("newsletters");
+        const comments = client.db("planPixelDB").collection("comments");
+        const meeting = client.db("planPixelDB").collection("meetings");
         const articleCollection = client
             .db("planPixelDB")
             .collection("articles");
@@ -120,6 +125,24 @@ const connectDB = async (app, callback) => {
         app.get(
             "/api/cards/search",
             async (req, res) => await SearchTasks(req, res, tasks, users)
+        );
+
+        // Comments of specific cards
+        app.get(
+            "/card-comments/:cardId",
+            async (req, res) => await getCommentsByCardId(req, res, comments)
+        );
+        app.post(
+            "/create-comment",
+            async (req, res) => await createComment(req, res, comments)
+        );
+        app.delete(
+            "/delete-comment/:id",
+            async (req, res) => await deleteCommentById(req, res, comments)
+        );
+        app.put(
+            "/update-comment/:id",
+            async (req, res) => await updateCommentById(req, res, comments)
         );
 
         // Task related APIs
@@ -285,6 +308,20 @@ const connectDB = async (app, callback) => {
         );
         app.delete("/api/newsletters/:id", async (req, res) =>
             deleteNewsletterSubscriber(req, res, newsletterCollection)
+        );
+
+        // Meeting related API
+        app.get(
+            "/api/meetings",
+            async (req, res) => await getMeeting(req, res, meeting)
+        );
+        app.post(
+            "/api/meetings",
+            async (req, res) => await createMeeting(req, res, meeting)
+        );
+        app.delete(
+            "/api/meetings/:id",
+            async (req, res) => await deleteMeeting(req, res, meeting)
         );
         // Article related API ------------
         app.post("/api/articles", async (req, res) =>
