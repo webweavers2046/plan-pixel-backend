@@ -77,17 +77,17 @@ const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollect
       }
     } else{
       // Unarchiving logics
-      if (Array.isArray(archiveData?.taskIds)) {
-        // User sends: {"taskIds": ["id1", "id2"]}
+      if (Array.isArray(archiveData)) {
+        // User sends: ["id1", "id2"]
         // Convert string IDs to ObjectId() and update archived to false 
-        const unarchiveStringTaskIds = archiveData?.taskIds?.map((unarchiveTaskId) => unarchiveTaskId);
+        const unarchiveStringTaskIds = archiveData?.map((unarchiveTaskId) => unarchiveTaskId);
         const unarchiveMongodbFormatIds = unarchiveStringTaskIds?.map((id) => new ObjectId(id));
-    
+        
         // Update tasks with specified IDs to set archived: false
         const result = await taskCollection.updateMany(
           { _id: { $in: unarchiveMongodbFormatIds } },
           { $set: { archived: false } }
-        );
+          );
     
         if (result.modifiedCount > 0) {
           // Once main task collection updated with archived: false 
