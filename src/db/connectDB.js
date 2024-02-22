@@ -52,6 +52,10 @@ const {
     SetActiveWorkspaceFromFilter,
 } = require("../api/controllers/workspace/Filter");
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
+const createComment = require("../api/controllers/comments/createComment");
+const getCommentsByCardId = require("../api/controllers/comments/getCommentsByCardId");
+const deleteCommentById = require("../api/controllers/comments/deleteCommentById");
+const updateCommentById = require("../api/controllers/comments/updateCommentById");
 const getAllUserFeedback = require("../api/controllers/feedbacks/getAllUserFeedback");
 const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedback");
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
