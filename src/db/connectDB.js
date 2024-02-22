@@ -62,6 +62,7 @@ const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
 const addArticle = require("../api/controllers/articles/addArticle");
 const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
 const getAllArticle = require("../api/controllers/articles/getAllArticle");
+const deleteArticle = require("../api/controllers/articles/deleteArticle");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
