@@ -95,8 +95,6 @@ const getAllArchivedTasks = async(req,res,archivedCollection) => {
   try {
     const allArchivedTasks = await archivedCollection.find().toArray()  
     res.send(allArchivedTasks)
-
-    console.log(allArchivedTasks)
   } catch (error) {
     console.log(error)
   }
