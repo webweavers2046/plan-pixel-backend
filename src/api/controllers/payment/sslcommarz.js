@@ -127,16 +127,16 @@ const paymentFailed = async (req, res, tasksCollection) => {
       { transactionId: req.params.transId }
     );
     if(result.deletedCount){
-            // const baseUrl =
-            //   app.settings.env === "development"
-            //     ? "http://localhost:3000"
-            //     : "https://plan-pixel.vercel.app/"; // Replace 'https://your-production-url.com' with your actual production URL
+            const baseUrl =
+              app.settings.env === "development"
+                ? "http://localhost:3000"
+                : "https://plan-pixel.vercel.app/"; // Replace 'https://your-production-url.com' with your actual production URL
 
 
-            // res.redirect(`${baseUrl}/payment-failed`);
-      res.redirect(
-        `https://plan-pixel.vercel.app/payment-failed`
-      );
+            res.redirect(`${baseUrl}/payment-failed`);
+      // res.redirect(
+      //   `https://plan-pixel.vercel.app/payment-failed`
+      // );
     }
   } catch (error) {
     console.log(error);
