@@ -107,14 +107,14 @@ const paymentSuccess = async (req, res, tasksCollection) => {
     if(result.modifiedCount > 0){
       console.log('success ',app.settings.env);
 
-            // const baseUrl =
-            //   app.settings.env === "development"
-            //     ? "http://localhost:3000"
-            //     : "https://plan-pixel.vercel.app/"; // Replace 'https://your-production-url.com' with your actual production URL
-            // res.redirect(`${baseUrl}/payment-success/${req.params.transId}`);
-      res.redirect(
-        `https://plan-pixel.vercel.app/payment-success/${req.params.transId}`
-      );
+            const baseUrl =
+              app.settings.env === "development"
+                ? "http://localhost:3000"
+                : "https://plan-pixel.vercel.app/"; // Replace 'https://your-production-url.com' with your actual production URL
+            res.redirect(`${baseUrl}/payment-success/${req.params.transId}`);
+      // res.redirect(
+      //   `https://plan-pixel.vercel.app/payment-success/${req.params.transId}`
+      // );
     }
   } catch (error) {
     console.log(error);
