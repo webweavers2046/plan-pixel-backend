@@ -1,6 +1,7 @@
 const setupGlobalErrorHandling = require("../errorHandling/handleGlobalError");
 const createMongoClient = require("./CreateMongoClient");
 
+const {getNotifications} = require("../api/controllers/notifications/getNotifications")
 const {
     getAllTasks,
     getFilteredTasks,
@@ -56,6 +57,9 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
+const { createNotifications } = require("../api/controllers/notifications/createNotifications");
+const { createTaskLabel } = require("../api/controllers/tasksLabel/createTaskLabel");
+const { readTaskLabel } = require("../api/controllers/tasksLabel/readTaskLabel");
 const getMeeting = require("../api/controllers/meetings/getMeeting");
 const createMeeting = require("../api/controllers/meetings/createMeeting");
 const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
@@ -310,6 +314,32 @@ const connectDB = async (app, callback) => {
         app.delete("/api/newsletters/:id", async (req, res) =>
             deleteNewsletterSubscriber(req, res, newsletterCollection)
         );
+
+        // Notification Realated APIS
+
+
+        // Notifications Get API
+        app.get("/api/notifications/:activeWorkspaceId", async(req, res) => getNotifications(req, res, workspaces)
+        );
+
+
+        // Notifications Update API
+        app.put("/api/updateNotifications/:activeWorkspaceId", async(req, res) => createNotifications(req, res, workspaces)
+        );
+
+
+
+        // Task Label Related APIs
+        // Task Get related API
+        app.get("/api/tasksLabel/:tasksId", async(req, res)=> readTaskLabel(req, res, cardTasks))
+
+
+
+
+
+
+
+
 
         // Meeting related API
         app.get(
