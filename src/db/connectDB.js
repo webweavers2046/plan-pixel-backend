@@ -30,7 +30,10 @@ const {
     paymentSuccess,
     paymentFailed,
 } = require("../api/controllers/payment/sslcommarz");
-const { getPaymentInfo } = require("../api/controllers/payment");
+const {
+    getPaymentInfo,
+    deletePaymentInfo,
+} = require("../api/controllers/payment");
 
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
@@ -370,6 +373,10 @@ const connectDB = async (app, callback) => {
         app.get(
             "/paymentInfo",
             async (req, res) => await getPaymentInfo(req, res, paymentInfo)
+        );
+        app.delete(
+            "/paymentInfo/:id",
+            async (req, res) => await deletePaymentInfo(req, res, paymentInfo)
         );
         app.post(
             "/stripePayment",
