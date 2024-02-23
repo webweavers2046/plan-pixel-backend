@@ -64,7 +64,7 @@ const getFilteredTasks = async (
         "dates.startDate": { $lte: targetDate }, // Start date is less than or equal to the target date
         "dates.dueDate": { $gte: targetDate }, // Due date is greater than or equal to the target date
         // members: { $in: [tasksOwner] }, // Filter by the specified member
-        status: "doing", //Filter by the specific tasks status
+        status: { $in: ["doing", "done"] }, //Filter by the specific tasks status
       };
     } else {
       filter = {

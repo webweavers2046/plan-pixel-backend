@@ -1,17 +1,18 @@
-let message = {
-  text: "",
-  name: "",
-};
-
+// const app = express();
+const createMongoClient = require("../../../db/CreateMongoClient");
+const client = createMongoClient();
+        const messageCollection = client
+          .db("planPixelDB")
+          .collection("messages");
 const messageSocketFunc = (socketIO) => {
   let users = [];
-
+console.log(users);
+console.log(users);
   socketIO.on("connection", (socket) => {
     console.log(`⚡: ${socket.id} user just connected!`);
-    socket.on("message", (data) => {
+    socket.on("message", async (data) => {
       socketIO.emit("messageResponse", data);
-      message.text = data.text;
-      message.name = data.name;
+    
     });
     socket.on("typing", (data) =>
       socket.broadcast.emit("typingResponse", data)
@@ -39,7 +40,7 @@ const messageSocketFunc = (socketIO) => {
 };
 const getSaveMessagesFunc = async (req, res, messageCollection) => {
   try {
-    const result =await messageCollection.find().toArray()
+    const result = await messageCollection.find().toArray();
     res.send(result);
   } catch (error) {}
 };
@@ -50,20 +51,22 @@ const saveMessageFunc = async (
   usersCollection
 ) => {
   try {
-    const { userEmail } = req.query;
-    const user = await usersCollection.findOne(
-      { email: userEmail },
-      { projection: { _id: 0, activeWorkspace: 1 } }
-    );
+    const newMessage = req.body;
+    // const { userEmail } = req.query;
+    // const user = await usersCollection.findOne(
+    //   { email: userEmail },
+    //   { projection: { _id: 0, activeWorkspace: 1 } }
+    // );
 
-    const activeWorkspaceId = user?.activeWorkspace.toString();
-    const newMessage = {
-      ...message,
-      activeWorkspaceId,
-    };
-    const response = await messageCollection.insertOne(message);
+    // const activeWorkspaceId = user?.activeWorkspace.toString();
+    // const newMessage = {
+    //   activeWorkspaceId,
+    //   ...message,
+    // };
+    const response = await messageCollection.insertOne(newMessage);
     res.send(response);
-    // const res = messageCollection.insertOne()
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 module.exports = { messageSocketFunc, saveMessageFunc, getSaveMessagesFunc };

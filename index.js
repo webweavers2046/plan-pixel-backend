@@ -103,8 +103,6 @@ connectDB(app, () => {
             allTasksInWorkspace,
             activeWorkspace,
           });
-
-          console.log("this is from line number 85", allTasksInWorkspace);
         } catch (error) {
           console.error("Error reloading and emitting tasks:", error);
         }
