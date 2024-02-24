@@ -55,12 +55,10 @@ const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollect
         if (result.modifiedCount > 0) {
           // Insert archived tasks
           const result = await archivedTasksCollection.insertMany(archiveData);
-          console.log("wantToArchive multiple", result);
           return res.send(result);
         }
       }
-  
-      // Logic for archiving a single task
+    
       if (singleTaskId) {
         // send reqest {"taskId": ""}
         // Update the specified task to set archived: true
