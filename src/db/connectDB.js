@@ -1,7 +1,9 @@
 const setupGlobalErrorHandling = require("../errorHandling/handleGlobalError");
 const createMongoClient = require("./CreateMongoClient");
 
-const {getNotifications} = require("../api/controllers/notifications/getNotifications")
+const {
+    getNotifications,
+} = require("../api/controllers/notifications/getNotifications");
 const {
     getAllTasks,
     getFilteredTasks,
@@ -28,7 +30,10 @@ const {
     paymentSuccess,
     paymentFailed,
 } = require("../api/controllers/payment/sslcommarz");
-const { getPaymentInfo } = require("../api/controllers/payment");
+const {
+    getPaymentInfo,
+    deletePaymentInfo,
+} = require("../api/controllers/payment");
 
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
@@ -61,15 +66,22 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
-const { createNotifications } = require("../api/controllers/notifications/createNotifications");
-const { createTaskLabel } = require("../api/controllers/tasksLabel/createTaskLabel");
-const { readTaskLabel } = require("../api/controllers/tasksLabel/readTaskLabel");
+const {
+    createNotifications,
+} = require("../api/controllers/notifications/createNotifications");
+const {
+    createTaskLabel,
+} = require("../api/controllers/tasksLabel/createTaskLabel");
+const {
+    readTaskLabel,
+} = require("../api/controllers/tasksLabel/readTaskLabel");
 const getMeeting = require("../api/controllers/meetings/getMeeting");
 const createMeeting = require("../api/controllers/meetings/createMeeting");
 const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
 const addArticle = require("../api/controllers/articles/addArticle");
 const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
 const getAllArticle = require("../api/controllers/articles/getAllArticle");
+const deleteArticle = require("../api/controllers/articles/deleteArticle");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection
@@ -320,29 +332,22 @@ const connectDB = async (app, callback) => {
 
         // Notification Realated APIS
 
-
         // Notifications Get API
-        app.get("/api/notifications/:activeWorkspaceId", async(req, res) => getNotifications(req, res, workspaces)
+        app.get("/api/notifications/:activeWorkspaceId", async (req, res) =>
+            getNotifications(req, res, workspaces)
         );
-
 
         // Notifications Update API
-        app.put("/api/updateNotifications/:activeWorkspaceId", async(req, res) => createNotifications(req, res, workspaces)
+        app.put(
+            "/api/updateNotifications/:activeWorkspaceId",
+            async (req, res) => createNotifications(req, res, workspaces)
         );
-
-
 
         // Task Label Related APIs
         // Task Get related API
-        app.get("/api/tasksLabel/:tasksId", async(req, res)=> readTaskLabel(req, res, cardTasks))
-
-
-
-
-
-
-
-
+        app.get("/api/tasksLabel/:tasksId", async (req, res) =>
+            readTaskLabel(req, res, cardTasks)
+        );
 
         // Meeting related API
         app.get(
@@ -372,6 +377,10 @@ const connectDB = async (app, callback) => {
         app.get(
             "/paymentInfo",
             async (req, res) => await getPaymentInfo(req, res, paymentInfo)
+        );
+        app.delete(
+            "/paymentInfo/:id",
+            async (req, res) => await deletePaymentInfo(req, res, paymentInfo)
         );
         app.post(
             "/stripePayment",
