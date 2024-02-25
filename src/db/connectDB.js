@@ -60,7 +60,7 @@ const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedbac
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
-const getMeeting = require("../api/controllers/meetings/getMeeting")
+const {getMeeting, getAllMeeting} = require("../api/controllers/meetings/getMeeting")
 const createMeeting = require("../api/controllers/meetings/createMeeting")
 const deleteMeeting = require("../api/controllers/meetings/deleteMeeting")
 const connectDB = async (app, callback) => {
@@ -286,6 +286,10 @@ const connectDB = async (app, callback) => {
     // Meeting related API
     app.get(
       "/api/meetings",
+      async (req, res) => await getAllMeeting(req, res, meeting)
+    );
+    app.get(
+      "/api/meetings/:workspaceId",
       async (req, res) => await getMeeting(req, res, meeting)
     );
     app.post(
