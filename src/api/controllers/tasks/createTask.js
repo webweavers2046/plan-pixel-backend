@@ -40,24 +40,31 @@ const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollect
 
   try {
     if (isArchive) {
-      if (Array.isArray(archiveData)) {
-        //send req [{"taskId": ""},task:""]
-        // Update multiple tasks
-        const arrayOfStringTaskIds = archiveData.map((archiveTask) => archiveTask?.taskId);
-        const taskIdsInMongoDBFormat = arrayOfStringTaskIds?.map((id) => new ObjectId(id));
-        
-        // Update all tasks with specified IDs to set archived: true
-        const result = await taskCollection.updateMany(
-          { _id: { $in: taskIdsInMongoDBFormat } },
-          { $set: { archived: true } }
-          );
-  
-        if (result.modifiedCount > 0) {
-          // Insert archived tasks
-          const result = await archivedTasksCollection.insertMany(archiveData);
-          return res.send(result);
-        }
-      }
+     // Check if archiveData is an array
+if (Array.isArray(archiveData)) {
+  // Extract taskIds from archiveData
+  const arrayOfStringTaskIds = archiveData.map((archiveTask) => archiveTask?.taskId);
+  const taskIdsInMongoDBFormat = arrayOfStringTaskIds?.map((id) => new ObjectId(id));
+
+  // Get tasks marked for archiving and retrieve their statuses
+  const allWayToArchiveTasks = await taskCollection.find({ _id: { $in: taskIdsInMongoDBFormat } }).toArray();
+  const archiveDataWithStatus = allWayToArchiveTasks.map((task, index) => ({
+    ...archiveData[index],  // Retain existing properties from archiveData
+    status: task?.status    // Add the status property from the corresponding task
+  }));
+
+  // Update all tasks with specified IDs to set archived: true
+  const result = await taskCollection.updateMany(
+    { _id: { $in: taskIdsInMongoDBFormat } },
+    { $set: { archived: true } }
+  );
+
+  if (result.modifiedCount > 0) {
+    // Insert archived tasks
+    const insertResult = await archivedTasksCollection.insertMany(archiveDataWithStatus);
+    return res.send(insertResult);
+  }
+}
     
       if (singleTaskId) {
         // send reqest {"taskId": ""}

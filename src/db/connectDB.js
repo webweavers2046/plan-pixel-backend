@@ -54,6 +54,7 @@ const {
   saveUserSearchHistory,
   getUserSearchHistory,
   deleteAllSearchHistory,
+  searchArchiveTasks,
 } = require("../api/controllers/workspace/search");
 
 // CardTasks Controllers
@@ -160,6 +161,8 @@ const connectDB = async (app, callback) => {
         app.delete("/deleteWorkspace/:workspaceId/:userEmail", async (req, res) => await deleteWorkspace(req, res, users, workspaces));
 
         //Archive tasks APIs
+        ///api/search/archived-tasks
+        app.get("/api/search/archived-tasks/:userEmail/:query",async(req,res)=> await searchArchiveTasks(req,res,archivedTasks)) 
         app.get("/api/read/archive-tasks",async(req,res)=> await getAllArchivedTasks(req,res,archivedTasks)) 
         app.post("/api/tasks/archive",async(req,res)=> await createArchiveTasks(req,res,tasks,archivedTasks)) 
 
@@ -200,7 +203,6 @@ const connectDB = async (app, callback) => {
         // Notifications Update API
         app.put("/api/updateNotifications/:activeWorkspaceId", async(req, res) => createNotifications(req, res, workspaces)
         );
-
 
 
         // Task Label Related APIs

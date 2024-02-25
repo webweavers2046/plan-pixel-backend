@@ -23,7 +23,7 @@ const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
 
   try {
     // Check if user email is provided, return error if not
-    if (!userEmail) return res.status(400).json({ error: "Please provide user email" });
+    if (!userEmail) return res.status(    0).json({ error: "Please provide user email" });
 
     // Retrieve the user and get all workspaces
     const user = await usersCollection.findOne({ email: userEmail });
@@ -35,13 +35,13 @@ const SearchTasks = async (req, res, tasksCollection, usersCollection) => {
     // Constructing the regex query based on title, description, and additional criteria
     const regexQuery = {
       $and: [
-        { workspace: { $in: workspaceIdsAsString } }, // Add the workspace filter
+        // Add the workspace filter
+        { workspace: { $in: workspaceIdsAsString } }, 
         {
           $or: [
             { title: { $regex: query, $options: "i" } },
             { description: { $regex: query, $options: "i" } },
             { creator: { $regex: query, $options: "i" } },
-            // Add more criteria here using $regex if needed
           ],
         },
       ],
@@ -93,10 +93,26 @@ const deleteAllSearchHistory = async(req,res,searchHistoryCollection) => {
   }
 }
 
+
+const searchArchiveTasks = async(req,res,archivedTasksCollection) => {
+
+
+  
+  if (!req.params.userEmail) return res.json({ error: "Please provide user email" });
+  const query = req.params.query
+      const regexQuery =  {taskName: { $regex: query, $options: "i" } }
+      const archivedTasks = await archivedTasksCollection.find(regexQuery).toArray()
+
+      res.send(archivedTasks)
+
+}
+
+
 module.exports = {
   searchMembers,
   SearchTasks,
   saveUserSearchHistory,
   getUserSearchHistory,
-  deleteAllSearchHistory
+  deleteAllSearchHistory,
+  searchArchiveTasks
 };
