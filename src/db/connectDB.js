@@ -1,11 +1,20 @@
+// Error Handling
 const setupGlobalErrorHandling = require("../errorHandling/handleGlobalError");
+
+// MongoDB
 const createMongoClient = require("./CreateMongoClient");
 
+const {getNotifications} = require("../api/controllers/notifications/getNotifications")
 const {
+
   getAllTasks,
   getFilteredTasks,
   getSingleTask,
+  getAllArchivedTasks,
+
 } = require("../api/controllers/tasks/readTasks");
+
+// Users Controllers
 const {
   getAllUsers,
   getSingleUser,
@@ -13,216 +22,176 @@ const {
   updateUser,
   updateUserImage,
 } = require("../api/controllers/users");
-const { CreateTask } = require("../api/controllers/tasks/createTask");
+
+// Tasks Controllers
+const { CreateTask, createArchiveTasks } = require("../api/controllers/tasks/createTask");
 const updateTaskState = require("../api/controllers/tasks/updateTask");
 const deleteTask = require("../api/controllers/tasks/deleteTask");
 
+// Workspace Controllers
 const getUserWorkspacesByEmail = require("../api/controllers/workspace/read-tasks");
 const activeWorkspace = require("../api/controllers/workspace/activeWorkspace");
 const { PaymentIntend } = require("../api/controllers/payment/stripe");
 const createWorkspace = require("../api/controllers/workspace");
 const addMemberToWorkspace = require("../api/controllers/workspace/addMemberToWorkspace");
 const {
-  sslcommarz,
-  paymentSuccess,
-  paymentFailed,
+    sslcommarz,
+    paymentSuccess,
+    paymentFailed,
 } = require("../api/controllers/payment/sslcommarz");
-const { getPaymentInfo } = require("../api/controllers/payment");
+const {
+    getPaymentInfo,
+    deletePaymentInfo,
+} = require("../api/controllers/payment");
 
+// Workspace Controllers
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
 const updateWorkspace = require("../api/controllers/workspace/update");
 const {
-  deleteMember,
-  deleteWorkspace,
+    deleteMember,
+    deleteWorkspace,
 } = require("../api/controllers/workspace/delete");
+
+// Workspace Search Controllers
 const {
   searchMembers,
   SearchTasks,
   saveUserSearchHistory,
   getUserSearchHistory,
   deleteAllSearchHistory,
+  searchArchiveTasks,
 } = require("../api/controllers/workspace/search");
+
+// CardTasks Controllers
 const getCardTasks = require("../api/controllers/cardTasks/getCardTasks");
 const createCardTask = require("../api/controllers/cardTasks/createCardTask");
 const deleteCardTask = require("../api/controllers/cardTasks/deleteCardTask");
 const updateTaskChecked = require("../api/controllers/cardTasks/updateTaskChecked");
-const {
-  FilterTasks,
-  SetActiveWorkspaceFromFilter,
-} = require("../api/controllers/workspace/Filter");
+
+// Workspace Filter Controllers
+const {FilterTasks,SetActiveWorkspaceFromFilter,} = require("../api/controllers/workspace/Filter");
+// Workspace Controllers
 const singleWorkspaceById = require("../api/controllers/workspace/singleWorkspaceById");
-const createComment = require("../api/controllers/comments/createComment");
-const getCommentsByCardId = require("../api/controllers/comments/getCommentsByCardId");
-const deleteCommentById = require("../api/controllers/comments/deleteCommentById");
-const updateCommentById = require("../api/controllers/comments/updateCommentById");
 const getAllUserFeedback = require("../api/controllers/feedbacks/getAllUserFeedback");
 const replyUserFeedback = require("../api/controllers/feedbacks/replyUserFeedback");
+
+// Shared Controllers
 const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData");
+
+// Newsletters Controllers
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
-const {getMeeting, getAllMeeting} = require("../api/controllers/meetings/getMeeting")
-const createMeeting = require("../api/controllers/meetings/createMeeting")
-const deleteMeeting = require("../api/controllers/meetings/deleteMeeting")
+const {
+    createNotifications,
+} = require("../api/controllers/notifications/createNotifications");
+const {
+    createTaskLabel,
+} = require("../api/controllers/tasksLabel/createTaskLabel");
+const {
+    readTaskLabel,
+} = require("../api/controllers/tasksLabel/readTaskLabel");
+const getMeeting = require("../api/controllers/meetings/getMeeting");
+const createMeeting = require("../api/controllers/meetings/createMeeting");
+const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
+const addArticle = require("../api/controllers/articles/addArticle");
+const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
+const getAllArticle = require("../api/controllers/articles/getAllArticle");
+const deleteArticle = require("../api/controllers/articles/deleteArticle");
+
+
+const { createNotifications } = require("../api/controllers/notifications/createNotifications");
+const { createTaskLabel } = require("../api/controllers/tasksLabel/createTaskLabel");
+const { readTaskLabel } = require("../api/controllers/tasksLabel/readTaskLabel");
+const getMeeting = require("../api/controllers/meetings/getMeeting");
+const createMeeting = require("../api/controllers/meetings/createMeeting");
+const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
+const addArticle = require("../api/controllers/articles/addArticle");
+const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
+const getAllArticle = require("../api/controllers/articles/getAllArticle");
+
+// Express App Initialization
 const connectDB = async (app, callback) => {
-  // Required client for the connection
-  const client = createMongoClient();
+    // Required client for the connection
+    const client = createMongoClient();
 
-  try {
-    client.connect();
+    try {
+        client.connect();
 
-    //Database collection
-    const tasks = client.db("planPixelDB").collection("tasks");
-    const users = client.db("planPixelDB").collection("users");
-    const workspaces = client.db("planPixelDB").collection("workspace");
-    const cardTasks = client.db("planPixelDB").collection("cardTasks");
-    const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
-    const searchHistoryCollection = client
-      .db("planPixelDB")
-      .collection("searchHistory");
-    const feedbackCollection = client.db("planPixelDB").collection("feedbacks");
-    const newsletterCollection = client
-      .db("planPixelDB")
-      .collection("newsletters");
-    const comments = client.db("planPixelDB").collection("comments");
-    const meeting = client.db("planPixelDB").collection("meetings");
+        //Database collection
+        const tasks = client.db("planPixelDB").collection("tasks");
+        const users = client.db("planPixelDB").collection("users");
+        const workspaces = client.db("planPixelDB").collection("workspace");
+        const cardTasks = client.db("planPixelDB").collection("cardTasks");
+        const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
 
-    //  allRoutes.initializeRoutes()
-    app.get("/users", async (req, res) => {
-      await getAllUsers(req, res, users);
-    });
-    app.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
-    app.get(
-      "/tasksFiltered",
-      async (req, res) =>
-        await getFilteredTasks(req, res, tasks, users, workspaces)
-    );
+        
+        const searchHistoryCollection = client.db("planPixelDB").collection("searchHistory");
+        const archivedTasks = client.db("planPixelDB").collection("ArchivedTasks");
+        const feedbackCollection = client.db("planPixelDB").collection("feedbacks");
+        const newsletterCollection = client.db("planPixelDB").collection("newsletters");
+        const comments = client.db("planPixelDB").collection("comments");
+        const meeting = client.db("planPixelDB").collection("meetings");
+        const articleCollection = client.db("planPixelDB").collection("articles");
 
-    // Tasks of different cards related APIs
-    app.get(
-      "/cardTasks/:cardId",
-      async (req, res) => await getCardTasks(req, res, cardTasks)
-    );
-    app.post(
-      "/createCardTask",
-      async (req, res) => await createCardTask(req, res, cardTasks)
-    );
-    app.delete(
-      "/deleteCardTask/:id",
-      async (req, res) => await deleteCardTask(req, res, cardTasks)
-    );
-    app.put(
-      "/updateChecked/:id",
-      async (req, res) => await updateTaskChecked(req, res, cardTasks)
-    );
-    app.get(
-      "/api/cards/search",
-      async (req, res) => await SearchTasks(req, res, tasks, users)
-    );
+      
 
-    // Comments of specific cards
-    app.get(
-      "/card-comments/:cardId",
-      async (req, res) => await getCommentsByCardId(req, res, comments)
-    );
-    app.post(
-      "/create-comment",
-      async (req, res) => await createComment(req, res, comments)
-    );
-    app.delete(
-      "/delete-comment/:id",
-      async (req, res) => await deleteCommentById(req, res, comments)
-    );
-    app.put(
-      "/update-comment/:id",
-      async (req, res) => await updateCommentById(req, res, comments)
-    );
+        //  allRoutes.initializeRoutes()
+        app.get("/users", async (req, res) => {await getAllUsers(req, res, users);});
+        app.get("/tasks",async (req, res) => await getAllTasks(req, res, tasks));
+        app.get("/tasksFiltered",async (req, res) =>await getFilteredTasks(req, res, tasks, users, workspaces));
 
-    // Task related APIs
-    app.post(
-      "/createTask/:activeWorkspaceId/:userEmail",
-      async (req, res) => await CreateTask(req, res, users, tasks, workspaces)
-    );
-    app.put(
-      "/updateTask/:id",
-      async (req, res) => await updateTaskState(req, res, tasks)
-    );
-    app.patch(
-      "/updateTaskState",
-      async (req, res) => await updateTaskState(req, res, tasks)
-    );
-    app.delete(
-      "/deleteTask/:id",
-      async (req, res) => await deleteTask(req, res, tasks)
-    );
-    app.get(
-      "/singleTask/:id",
-      async (req, res) => await getSingleTask(req, res, tasks)
-    );
+        // users related APIs
+        app.get("/users", async (req, res) => await getAllUsers(req, res, users));
+        app.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
+        app.get("/tasksFiltered", async (req, res) => await getFilteredTasks(req, res, tasks, users, workspaces)); // Get filtered tasks
+        
+        // Tasks of different cards related APIs
 
-    // User related APIs
-    app.get("/users", async (req, res) => await getAllUsers(req, res, users));
-    app.get(
-      "/users/:email",
-      async (req, res) => await getSingleUser(req, res, users)
-    );
-    app.post("/users", async (req, res) => await createUser(req, res, users));
-    app.put(
-      "/users/:email",
-      async (req, res) => await updateUser(req, res, users)
-    );
-    app.put(
-      "/userImage/:email",
-      async (req, res) => await updateUserImage(req, res, users)
-    );
+        app.get("/cardTasks/:cardId", async (req, res) => await getCardTasks(req, res, cardTasks)); // Get card tasks by card ID
+        app.post("/createCardTask", async (req, res) => await createCardTask(req, res, cardTasks)); // Create a card task
+        app.delete("/deleteCardTask/:id", async (req, res) => await deleteCardTask(req, res, cardTasks)); // Delete card task by ID
+        app.put("/updateChecked/:id", async (req, res) => await updateTaskChecked(req, res, cardTasks)); // Update checked status by ID
+        app.get("/api/cards/search", async (req, res) => await SearchTasks(req, res, tasks, users)); // Search tasks across cards
 
-    // Workspace related APIs
-    // router.get("/workspaces", async (req, res) => await workspaces(req, res, workspaces));
-    app.get(
-      "/userWokspaces/:userEmail",
-      async (req, res) =>
-        await getUserWorkspacesByEmail(req, res, users, workspaces)
-    );
-    app.get(
-      "/single-workspace/:id",
-      async (req, res) => await singleWorkspaceById(req, res, workspaces)
-    );
-    app.get(
-      "/api/active-workspace",
-      async (req, res) =>
-        await activeWorkspace(req, res, workspaces, tasks, users)
-    );
-    app.get(
-      "/api/workspaces/active/:userEmail",
-      async (req, res) =>
-        await getExistingActiveWrokspace(req, res, users, workspaces)
-    );
-    app.get(
-      "/api/members/search",
-      async (req, res) => await searchMembers(req, res, users)
-    );
+        // Comments of specific cards
+        app.get("/card-comments/:cardId",async (req, res) => await getCommentsByCardId(req, res, comments));
+        app.post("/create-comment",async (req, res) => await createComment(req, res, comments));
+        app.delete("/delete-comment/:id",async (req, res) => await deleteCommentById(req, res, comments));
+        app.put("/update-comment/:id",async (req, res) => await updateCommentById(req, res, comments));
 
-    app.post(
-      "/create-workspace/:creatorEmail",
-      async (req, res) => await createWorkspace(req, res, users, workspaces)
-    );
-    app.post(
-      "/add-member-to-workspace",
-      async (req, res) =>
-        await addMemberToWorkspace(req, res, users, workspaces)
-    );
-    app.put(
-      "/updateWorkspace/:workspaceId",
-      async (req, res) => await updateWorkspace(req, res, workspaces)
-    );
+       // Task related APIs
+        app.post("/createTask/:activeWorkspaceId/:userEmail", async (req, res) => await CreateTask(req, res, users, tasks, workspaces)); // Create a task
+        app.put("/updateTask/:id", async (req, res) => await updateTaskState(req, res, tasks)); 
+        app.patch("/updateTaskState", async (req, res) => await updateTaskState(req, res, tasks)); 
+        app.delete("/deleteTask/:id", async (req, res) => await deleteTask(req, res, tasks)); 
+        app.get("/singleTask/:id", async (req, res) => await getSingleTask(req, res, tasks)); 
 
-    app.delete(
-      "/deleteMember/:workspaceId/:userEmail/:memberEmail",
-      async (req, res) => await deleteMember(req, res, users, workspaces)
-    );
-    app.delete(
-      "/deleteWorkspace/:workspaceId/:userEmail",
-      async (req, res) => await deleteWorkspace(req, res, users, workspaces)
-    );
+      
+
+        // User related APIs
+        app.get("/users", async (req, res) => await getAllUsers(req, res, users));
+        app.get("/users/:email", async (req, res) => await getSingleUser(req, res, users));
+        app.post("/users", async (req, res) => await createUser(req, res, users));
+        app.put("/users/:email", async (req, res) => await updateUser(req, res, users));
+        app.put("/userImage/:email", async (req, res) => await updateUserImage(req, res, users));
+       
+        // Workspace related APIs
+        app.get("/userWokspaces/:userEmail", async (req, res) => await getUserWorkspacesByEmail(req, res, users, workspaces));
+        app.get("/single-workspace/:id", async (req, res) => await singleWorkspaceById(req, res, workspaces));
+        app.get("/api/active-workspace", async (req, res) => await activeWorkspace(req, res, workspaces, tasks, users));
+        app.get("/api/workspaces/active/:userEmail", async (req, res) => await getExistingActiveWrokspace(req, res, users, workspaces));
+        app.get("/api/members/search", async (req, res) => await searchMembers(req, res, users));
+        app.post("/create-workspace/:creatorEmail", async (req, res) => await createWorkspace(req, res, users, workspaces));
+        app.post("/add-member-to-workspace", async (req, res) => await addMemberToWorkspace(req, res, users, workspaces));
+        app.put("/updateWorkspace/:workspaceId", async (req, res) => await updateWorkspace(req, res, workspaces));
+        app.delete("/deleteMember/:workspaceId/:userEmail/:memberEmail", async (req, res) => await deleteMember(req, res, users, workspaces));
+        app.delete("/deleteWorkspace/:workspaceId/:userEmail", async (req, res) => await deleteWorkspace(req, res, users, workspaces));
+
+        //Archive tasks APIs
+        ///api/search/archived-tasks
+        app.get("/api/search/archived-tasks/:userEmail/:query",async(req,res)=> await searchArchiveTasks(req,res,archivedTasks)) 
+        app.get("/api/read/archive-tasks",async(req,res)=> await getAllArchivedTasks(req,res,archivedTasks)) 
+        app.post("/api/tasks/archive",async(req,res)=> await createArchiveTasks(req,res,tasks,archivedTasks)) 
 
     // Filter tasks APIs
     app.get(
@@ -286,10 +255,6 @@ const connectDB = async (app, callback) => {
     // Meeting related API
     app.get(
       "/api/meetings",
-      async (req, res) => await getAllMeeting(req, res, meeting)
-    );
-    app.get(
-      "/api/meetings/:workspaceId",
       async (req, res) => await getMeeting(req, res, meeting)
     );
     app.post(
@@ -320,17 +285,18 @@ const connectDB = async (app, callback) => {
       paymentFailed(req, res, paymentInfo)
     );
 
-    if (callback) {
-      callback();
-    }
+        if (callback) {
+            callback();
+        }
 
-    console.log("Successfully connected to MongoDB!");
-  } catch (error) {
-    console.error("Error connecting to MongoDB:", error);
-  } finally {
-    // Global error handling
-    await setupGlobalErrorHandling(app);
-  }
+        
+      console.log("Successfully connected to MongoDB!");
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error);
+    } finally {
+        // Global error handling
+        await setupGlobalErrorHandling(app);
+    }
 };
 
 module.exports = connectDB;

@@ -28,8 +28,9 @@ const addMemberToWorkspace = async (req, res, userCollection, workspaceCollectio
     // Update the workspace by pushing the new member's email
     const updatedWorkspace = await userCollection.updateOne(
       { email: userEmail },
-      { $addToSet: { workspaces: workspaceId } } // Use $addToSet to add unique elements
+      { $addToSet: { workspaces: new ObjectId(workspaceId) } }
     );
+
 
     // Check if the update was successful
     if (updatedWorkspace.matchedCount === 0) {

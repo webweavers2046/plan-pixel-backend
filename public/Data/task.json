@@ -17,7 +17,8 @@
     "updatedAt": "2024-02-15T14:20:00",
     "isDropped": false,
     "lastModifiedBy": "dynamic.lastModified1@example.com",
-    "tags":[]
+    "tags":[],
+    "archived":false
   },
   {
     "title": "Task Two",
@@ -37,7 +38,8 @@
     "updatedAt": "2024-02-16T13:15:00",
     "isDropped": false,
     "lastModifiedBy": "dynamic.lastModified2@example.com",
-    "tags":[]
+    "tags":[],
+    "archived":false
   },
   {
     "title": "Task Three",
@@ -57,7 +59,8 @@
     "updatedAt": "2024-02-17T18:45:00",
     "isDropped": false,
     "lastModifiedBy": "dynamic.lastModified3@example.com",
-    "tags":[]
+    "tags":[],
+    "archived":false
   },
   {
     "title": "Task Four",
@@ -77,7 +80,8 @@
     "updatedAt": "2024-02-18T15:30:00",
     "isDropped": false,
     "lastModifiedBy": "dynamic.lastModified4@example.com",
-    "tags":[]
+    "tags":[],
+    "archived":false
     
   },
   {
@@ -98,6 +102,8 @@
     "updatedAt": "2024-02-19T12:20:00",
     "isDropped": false,
     "lastModifiedBy": "dynamic.lastModified5@example.com",
-    "tags":[]
+    "tags":[],
+    "archived":false
+    
   }
 ]
