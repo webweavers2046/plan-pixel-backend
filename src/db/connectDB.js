@@ -6,10 +6,12 @@ const createMongoClient = require("./CreateMongoClient");
 
 const {getNotifications} = require("../api/controllers/notifications/getNotifications")
 const {
+
   getAllTasks,
   getFilteredTasks,
   getSingleTask,
   getAllArchivedTasks,
+
 } = require("../api/controllers/tasks/readTasks");
 
 // Users Controllers
@@ -37,7 +39,10 @@ const {
     paymentSuccess,
     paymentFailed,
 } = require("../api/controllers/payment/sslcommarz");
-const { getPaymentInfo } = require("../api/controllers/payment");
+const {
+    getPaymentInfo,
+    deletePaymentInfo,
+} = require("../api/controllers/payment");
 
 // Workspace Controllers
 const getExistingActiveWrokspace = require("../api/controllers/workspace/getExistingActiveWrokspace");
@@ -76,6 +81,22 @@ const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData
 // Newsletters Controllers
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
+const {
+    createNotifications,
+} = require("../api/controllers/notifications/createNotifications");
+const {
+    createTaskLabel,
+} = require("../api/controllers/tasksLabel/createTaskLabel");
+const {
+    readTaskLabel,
+} = require("../api/controllers/tasksLabel/readTaskLabel");
+const getMeeting = require("../api/controllers/meetings/getMeeting");
+const createMeeting = require("../api/controllers/meetings/createMeeting");
+const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
+const addArticle = require("../api/controllers/articles/addArticle");
+const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
+const getAllArticle = require("../api/controllers/articles/getAllArticle");
+const deleteArticle = require("../api/controllers/articles/deleteArticle");
 
 
 const { createNotifications } = require("../api/controllers/notifications/createNotifications");
@@ -102,6 +123,7 @@ const connectDB = async (app, callback) => {
         const workspaces = client.db("planPixelDB").collection("workspace");
         const cardTasks = client.db("planPixelDB").collection("cardTasks");
         const paymentInfo = client.db("planPixelDB").collection("paymentInfo");
+
         
         const searchHistoryCollection = client.db("planPixelDB").collection("searchHistory");
         const archivedTasks = client.db("planPixelDB").collection("ArchivedTasks");
@@ -110,6 +132,8 @@ const connectDB = async (app, callback) => {
         const comments = client.db("planPixelDB").collection("comments");
         const meeting = client.db("planPixelDB").collection("meetings");
         const articleCollection = client.db("planPixelDB").collection("articles");
+
+      
 
         //  allRoutes.initializeRoutes()
         app.get("/users", async (req, res) => {await getAllUsers(req, res, users);});
@@ -122,6 +146,7 @@ const connectDB = async (app, callback) => {
         app.get("/tasksFiltered", async (req, res) => await getFilteredTasks(req, res, tasks, users, workspaces)); // Get filtered tasks
         
         // Tasks of different cards related APIs
+
         app.get("/cardTasks/:cardId", async (req, res) => await getCardTasks(req, res, cardTasks)); // Get card tasks by card ID
         app.post("/createCardTask", async (req, res) => await createCardTask(req, res, cardTasks)); // Create a card task
         app.delete("/deleteCardTask/:id", async (req, res) => await deleteCardTask(req, res, cardTasks)); // Delete card task by ID
@@ -140,6 +165,8 @@ const connectDB = async (app, callback) => {
         app.patch("/updateTaskState", async (req, res) => await updateTaskState(req, res, tasks)); 
         app.delete("/deleteTask/:id", async (req, res) => await deleteTask(req, res, tasks)); 
         app.get("/singleTask/:id", async (req, res) => await getSingleTask(req, res, tasks)); 
+
+      
 
         // User related APIs
         app.get("/users", async (req, res) => await getAllUsers(req, res, users));
@@ -205,6 +232,7 @@ const connectDB = async (app, callback) => {
         );
 
 
+
         // Task Label Related APIs
         // Task Get related API
         app.get("/api/tasksLabel/:tasksId", async(req, res)=> readTaskLabel(req, res, cardTasks))
@@ -220,15 +248,63 @@ const connectDB = async (app, callback) => {
         app.post("/api/articles", async (req, res) =>addArticle(req, res, articleCollection));
         app.get("/api/articles", async (req, res) =>
             getAllArticle(req, res, articleCollection)
+
+                
         );
         app.delete("/api/articles/:id", async (req, res) =>deleteArticle(req, res, articleCollection));
 
+        // Notification Realated APIS
+
+        // Notifications Get API
+        app.get("/api/notifications/:activeWorkspaceId", async (req, res) =>
+            getNotifications(req, res, workspaces)
+        );
+
+        // Notifications Update API
+        app.put(
+            "/api/updateNotifications/:activeWorkspaceId",
+            async (req, res) => createNotifications(req, res, workspaces)
+        );
+
+        // Task Label Related APIs
+        // Task Get related API
+        app.get("/api/tasksLabel/:tasksId", async (req, res) =>
+            readTaskLabel(req, res, cardTasks)
+        );
+
+        // Meeting related API
+        app.get(
+            "/api/meetings",
+            async (req, res) => await getMeeting(req, res, meeting)
+        );
+        app.post(
+            "/api/meetings",
+            async (req, res) => await createMeeting(req, res, meeting)
+        );
+        app.delete(
+            "/api/meetings/:id",
+            async (req, res) => await deleteMeeting(req, res, meeting)
+        );
+        // Article related API ------------
+        app.post("/api/articles", async (req, res) =>
+            addArticle(req, res, articleCollection)
+        );
+        app.get("/api/articles", async (req, res) =>
+            getAllArticle(req, res, articleCollection)
+        );
+        app.delete("/api/articles/:id", async (req, res) =>
+            deleteArticle(req, res, articleCollection)
+        );
+
         // Payment related API
+
         app.get("/paymentInfo",async (req, res) => await getPaymentInfo(req, res, paymentInfo));
         app.post("/stripePayment",async (req, res) => await PaymentIntend(req, res));
         app.post("/sslPayment", async (req, res) =>sslcommarz(req, res, paymentInfo));
         app.post("/payment/success/:transId", async (req, res) =>paymentSuccess(req, res, paymentInfo));
         app.post("/payment/failed/:transId", async (req, res) =>paymentFailed(req, res, paymentInfo));
+
+       
 
         if (callback) {
             callback();

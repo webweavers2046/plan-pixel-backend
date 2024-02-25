@@ -4,7 +4,7 @@ const addNewsletterData = async (req, res, newsletterCollection) => {
         const result = await newsletterCollection.insertOne(newSubscriber);
         res.send(result);
     } catch (error) {
-        console.log("error to add new article in database", error);
+
     }
 };
 
