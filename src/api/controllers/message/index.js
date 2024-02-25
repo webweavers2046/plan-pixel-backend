@@ -1,17 +1,23 @@
 // const app = express();
-const createMongoClient = require("../../../db/CreateMongoClient");
-const client = createMongoClient();
-        const messageCollection = client
-          .db("planPixelDB")
-          .collection("messages");
+// const createMongoClient = require("../../../db/CreateMongoClient");
+// const client = createMongoClient();
+//         const messageCollection = client
+//           .db("planPixelDB")
+//           .collection("messages");
+
+
+
+
+
 const messageSocketFunc = (socketIO) => {
   let users = [];
-console.log(users);
-console.log(users);
+console.log("user form lien 9",users);
   socketIO.on("connection", (socket) => {
     console.log(`⚡: ${socket.id} user just connected!`);
     socket.on("message", async (data) => {
+
       socketIO.emit("messageResponse", data);
+console.log('line 20', data);
     
     });
     socket.on("typing", (data) =>
@@ -19,13 +25,22 @@ console.log(users);
     );
 
     //Listens when a new user joins the server
-    socket.on("newUser", (data) => {
-      //Adds the new user to the list of users
-      users.push(data);
-      // console.log(users);
-      //Sends the list of users to the client
-      socketIO.emit("newUserResponse", users);
-    });
+socket.on("newUser", (data) => {
+  // Check if the user already exists in the users array
+  const existingUser = users.find((user) => user.userName === data.userName);
+
+  if (existingUser) {
+    // If the user already exists, update their socketID
+    existingUser.socketID = data.socketID;
+  } else {
+    // If the user doesn't exist, add them to the users array
+    users.push(data);
+  }
+  console.log("line 39" ,data);
+
+  // Sends the updated list of users to the client
+  socketIO.emit("newUserResponse", users);
+});
 
     socket.on("disconnect", () => {
       console.log("🔥: A user disconnected");
@@ -38,6 +53,9 @@ console.log(users);
     });
   });
 };
+
+
+
 const getSaveMessagesFunc = async (req, res, messageCollection) => {
   try {
     const result = await messageCollection.find().toArray();
