@@ -88,10 +88,23 @@ console.log(targetDate);
   }
 };
 
+
+// get all archived tasks
+const getAllArchivedTasks = async(req,res,archivedCollection) => {
+
+  try {
+    const allArchivedTasks = await archivedCollection.find().toArray()  
+    res.send(allArchivedTasks)
+  } catch (error) {
+    console.log(error)
+  }
+} 
+
 module.exports = {
   getAllTasks,
   getSingleTask,
   geTaskByStats,
   getFilteredTasks,
+  getAllArchivedTasks
 };
 
