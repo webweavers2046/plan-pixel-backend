@@ -66,6 +66,10 @@ const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
 const addArticle = require("../api/controllers/articles/addArticle");
 const addNewsletterData = require("../api/controllers/newsletters/addNewsletterData");
 const getAllArticle = require("../api/controllers/articles/getAllArticle");
+const getCommentsByCardId = require("../api/controllers/comments/getCommentsByCardId");
+const createComment = require("../api/controllers/comments/createComment");
+const updateCommentById = require("../api/controllers/comments/updateCommentById");
+const deleteCommentById = require("../api/controllers/comments/deleteCommentById");
 
 const connectDB = async (app, callback) => {
     // Required client for the connection

@@ -1,6 +1,6 @@
 const searchMembers = async (req, res, userCollection) => {
   const { query } = req.query;
-  console.log('member', query);
+  // console.log('member', query);
 
   try {
       const regexQuery = {

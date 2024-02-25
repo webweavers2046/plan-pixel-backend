@@ -20,7 +20,7 @@ const getExistingActiveWrokspace = async (
       });
       // Respond with the active workspaces
       res.json(foundWorkspace);
-      console.log(foundWorkspace);
+      // console.log(foundWorkspace);
     }
   } catch (error) {
     // Handle errors

@@ -12,7 +12,7 @@ const updateCommentById = async (req, res, comments) => {
     };
 
     const result = await comments.updateOne(filter, updateOperation);
-    console.log(result);
+    // console.log(result);
 
     res.send(result);
   } catch (error) {

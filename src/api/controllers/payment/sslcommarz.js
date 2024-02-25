@@ -105,7 +105,7 @@ const paymentSuccess = async (req, res, tasksCollection) => {
       }
     );
     if(result.modifiedCount > 0){
-      console.log('success ',app.settings.env);
+      // console.log('success ',app.settings.env);
 
             // const baseUrl =
             //   app.settings.env === "development"
