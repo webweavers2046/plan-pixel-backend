@@ -29,7 +29,7 @@ const getActiveWorkspace = async (
 
     // workspace list ,tasks ,and members,
     const userWokspaceList = await workspaceCollection.find({ _id: { $in: userWorkspaceListIDs } }).toArray();
-    const activeWorkspaceTasks = await tasksCollection.find({ _id: { $in: activeWorkspaceTasksIDs } }).toArray();
+    const activeWorkspaceTasks = await tasksCollection.find({ _id: { $in: activeWorkspaceTasksIDs }, archived: false }).toArray();
     const activeWorkspaceMembers = await usersCollection.find({ email: { $in: activeWorkspaceMembersEmails } }).toArray();
 
     // Send the updated workspace and all tasks back to the client
