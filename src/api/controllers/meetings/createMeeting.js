@@ -2,7 +2,7 @@ const { ObjectId } = require("mongodb");
 
 const createMeeting = async (req, res, meetingCollection) => {
   const newMeeting = req.body;
-  console.log(newMeeting);
+  // console.log(newMeeting);
   try {
     const meeting = await meetingCollection.insertOne({
         newMeeting

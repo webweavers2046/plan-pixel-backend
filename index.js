@@ -25,8 +25,6 @@ let tasksCollection;
 let workspaceCollection;
 let usersCollection;
 
-
-
 // Connect to MongoDB
 const client = createMongoClient();
 
@@ -63,12 +61,17 @@ connectDB(app, () => {
     const userEmail = lastChangedId?.lastModifiedBy
     const user = await usersCollection.findOne({ email: userEmail });
     const activeWorkspace = await workspaceCollection.findOne({_id: new ObjectId(user?.activeWorkspace)}) 
+
     const userWokspaceIds = await user?.workspaces?.map(id => new ObjectId(id))
+
+    // if user has no workspace then don't do anything
+    if(!Array.isArray(userWokspaceIds)) return;
     const userWorkspaces = await workspaceCollection?.find({ _id: { $in: userWokspaceIds } }).toArray();
     
     // filter those ids, fetch tasks matches those IDs
     const workspaceTasksIds = activeWorkspace?.tasks?.map(workspaceId => new ObjectId(workspaceId))
-    const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds } }).toArray();
+    if(!Array.isArray(workspaceTasksIds)) return;
+    const allTasksInWorkspace = await tasksCollection?.find({ _id: { $in: workspaceTasksIds },archived:false}).toArray();
     
     // get members by emails involved in active workspace
     const workspaceMembersEmails = activeWorkspace?.members?.map(member => member)
@@ -82,7 +85,6 @@ connectDB(app, () => {
       activeWorkspace
     });
     
-    console.log("this is from line number 85", allTasksInWorkspace)
     
     } catch (error) {
       console.error("Error reloading and emitting tasks:", error);
