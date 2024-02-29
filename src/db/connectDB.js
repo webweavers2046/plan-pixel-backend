@@ -92,7 +92,10 @@ const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
 
-const {getMeeting, getAllMeeting} = require("../api/controllers/meetings/getMeeting");
+const {
+  getMeeting,
+  getAllMeeting,
+} = require("../api/controllers/meetings/getMeeting");
 const createMeeting = require("../api/controllers/meetings/createMeeting");
 const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
 const addArticle = require("../api/controllers/articles/addArticle");
@@ -109,7 +112,6 @@ const {
 const {
   readTaskLabel,
 } = require("../api/controllers/tasksLabel/readTaskLabel");
-
 
 // Express App Initialization
 const connectDB = async (app, callback) => {
@@ -374,6 +376,17 @@ const connectDB = async (app, callback) => {
     app.delete(
       "/api/meetings/:id",
       async (req, res) => await deleteMeeting(req, res, meeting)
+    );
+
+    // Article related API ------------
+    app.post("/api/articles", async (req, res) =>
+      addArticle(req, res, articleCollection)
+    );
+    app.get("/api/articles", async (req, res) =>
+      getAllArticle(req, res, articleCollection)
+    );
+    app.delete("/api/articles/:id", async (req, res) =>
+      deleteArticle(req, res, articleCollection)
     );
 
     // Payment related API
