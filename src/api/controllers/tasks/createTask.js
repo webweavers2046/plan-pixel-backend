@@ -34,25 +34,49 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
 
 // Archived tasks
 const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollection) => {
-  const task = req.body;
-  console.log(task);
+  const task = req?.body;
+  // console.log(task);
 
   const { _id, archived, ...rest } = task;
   const archivedTask = {
     ...rest,
     archived: true
   };
-  console.log(_id);
-  console.log(archivedTask);
+  // console.log(_id);
+  // console.log(archivedTask);
 
-    try {
-      const deleteTask = await taskCollection.deleteOne({_id:new ObjectId(_id)})
-      console.log(deleteTask);
-      
-      const insertArchiveTask = await archivedTasksCollection.insertOne(archivedTask);
-      res.send(insertArchiveTask);
+  try {
+    const deleteTask = await taskCollection.deleteOne({ _id: new ObjectId(_id) })
+    // console.log(deleteTask);
 
-    } 
+    const insertArchiveTask = await archivedTasksCollection.insertOne(archivedTask);
+    res.send(insertArchiveTask);
+
+  }
+  catch (error) {
+    console.log(error)
+  }
+};
+
+const createUnArchiveTasks = async (req, res, taskCollection, archivedTasksCollection) => {
+  const task = req?.body;
+  // console.log(task);
+
+  const { archiver, _id, archived, ...rest } = task;
+  const UnArchiveTask = {
+    ...rest,
+    archived: false
+  };
+  // console.log(UnArchiveTask);
+
+  try {
+    const deleteArchivedTask = await archivedTasksCollection.deleteOne({ _id: new ObjectId(_id) })
+    // console.log(deleteArchivedTask);
+
+    const insertUnArchiveDTask = await taskCollection.insertOne(UnArchiveTask);
+    res.send(insertUnArchiveDTask);
+
+  }
   catch (error) {
     console.log(error)
   }
@@ -61,5 +85,6 @@ const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollect
 
 module.exports = {
   CreateTask,
-  createArchiveTasks
+  createArchiveTasks,
+  createUnArchiveTasks
 };
