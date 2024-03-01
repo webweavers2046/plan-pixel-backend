@@ -33,6 +33,7 @@ const CreateTask = async (req, res, usersCollection, tasksCollection, workspaces
 };
 
 // Archived tasks
+
 const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollection) => {
   const task = req?.body;
   // console.log(task);
@@ -43,11 +44,11 @@ const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollect
     archived: true
   };
   // console.log(_id);
-  // console.log(archivedTask);
+  console.log('hitting archive',archivedTask);
 
   try {
     const deleteTask = await taskCollection.deleteOne({ _id: new ObjectId(_id) })
-    // console.log(deleteTask);
+    console.log(deleteTask);
 
     const insertArchiveTask = await archivedTasksCollection.insertOne(archivedTask);
     res.send(insertArchiveTask);
@@ -58,9 +59,11 @@ const createArchiveTasks = async (req, res, taskCollection, archivedTasksCollect
   }
 };
 
-const createUnArchiveTasks = async (req, res, taskCollection, archivedTasksCollection) => {
+const createUnArchiveTasks = async (req, res, taskCollection, archivedTasksCollection, workspaces, users) => {
   const task = req?.body;
-  // console.log(task);
+  const activeWorkspaceId = task?.workspace;
+  const userEmail = task?.creator;
+  console.log(activeWorkspaceId);
 
   const { archiver, _id, archived, ...rest } = task;
   const UnArchiveTask = {
@@ -71,9 +74,18 @@ const createUnArchiveTasks = async (req, res, taskCollection, archivedTasksColle
 
   try {
     const deleteArchivedTask = await archivedTasksCollection.deleteOne({ _id: new ObjectId(_id) })
-    // console.log(deleteArchivedTask);
-
+    console.log(deleteArchivedTask);
     const insertUnArchiveDTask = await taskCollection.insertOne(UnArchiveTask);
+
+    const taskId = insertUnArchiveDTask?.insertedId?.toString();
+    console.log(taskId);
+
+    // Update tasks in the workspace
+    await workspaces.updateOne({ _id: new ObjectId(activeWorkspaceId) }, { $push: { tasks: taskId } });
+
+    // Update user document
+
+    await users.updateOne({ email: userEmail }, { $push: { tasks: taskId }, $set: { lastModifiedBy: userEmail } });
     res.send(insertUnArchiveDTask);
 
   }

@@ -301,7 +301,7 @@ const connectDB = async (app, callback) => {
         app.post(
             "/api/tasks/unArchive",
             async (req, res) =>
-                await createUnArchiveTasks(req, res, tasks, archivedTasks)
+                await createUnArchiveTasks(req, res, tasks, archivedTasks, workspaces, users)
         );
 
         // Filter tasks APIs
