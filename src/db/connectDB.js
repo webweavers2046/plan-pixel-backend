@@ -93,7 +93,10 @@ const getTheNumberOfData = require("../api/controllers/shared/getTheNumberOfData
 const getAllNewsletterSubscribers = require("../api/controllers/newsletters/getAllNewsletterSubscribers");
 const deleteNewsletterSubscriber = require("../api/controllers/newsletters/deleteNewsletterSubscriber");
 
-const { getMeeting, getAllMeeting } = require("../api/controllers/meetings/getMeeting");
+const {
+    getMeeting,
+    getAllMeeting,
+} = require("../api/controllers/meetings/getMeeting");
 const createMeeting = require("../api/controllers/meetings/createMeeting");
 const deleteMeeting = require("../api/controllers/meetings/deleteMeeting");
 const addArticle = require("../api/controllers/articles/addArticle");
@@ -129,20 +132,29 @@ const connectDB = async (app, callback) => {
         const searchHistoryCollection = client
             .db("planPixelDB")
             .collection("searchHistory");
-        const archivedTasks = client.db("planPixelDB").collection("ArchivedTasks");
-        const feedbackCollection = client.db("planPixelDB").collection("feedbacks");
+        const archivedTasks = client
+            .db("planPixelDB")
+            .collection("ArchivedTasks");
+        const feedbackCollection = client
+            .db("planPixelDB")
+            .collection("feedbacks");
         const newsletterCollection = client
             .db("planPixelDB")
             .collection("newsletters");
         const comments = client.db("planPixelDB").collection("comments");
         const meeting = client.db("planPixelDB").collection("meetings");
-        const articleCollection = client.db("planPixelDB").collection("articles");
+        const articleCollection = client
+            .db("planPixelDB")
+            .collection("articles");
 
         //  allRoutes.initializeRoutes()
         app.get("/users", async (req, res) => {
             await getAllUsers(req, res, users);
         });
-        app.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
+        app.get(
+            "/tasks",
+            async (req, res) => await getAllTasks(req, res, tasks)
+        );
         app.get(
             "/tasksFiltered",
             async (req, res) =>
@@ -150,8 +162,14 @@ const connectDB = async (app, callback) => {
         );
 
         // users related APIs
-        app.get("/users", async (req, res) => await getAllUsers(req, res, users));
-        app.get("/tasks", async (req, res) => await getAllTasks(req, res, tasks));
+        app.get(
+            "/users",
+            async (req, res) => await getAllUsers(req, res, users)
+        );
+        app.get(
+            "/tasks",
+            async (req, res) => await getAllTasks(req, res, tasks)
+        );
         app.get(
             "/tasksFiltered",
             async (req, res) =>
@@ -202,7 +220,8 @@ const connectDB = async (app, callback) => {
         // Task related APIs
         app.post(
             "/createTask/:activeWorkspaceId/:userEmail",
-            async (req, res) => await CreateTask(req, res, users, tasks, workspaces)
+            async (req, res) =>
+                await CreateTask(req, res, users, tasks, workspaces)
         ); // Create a task
         app.put(
             "/updateTask/:id",
@@ -222,12 +241,18 @@ const connectDB = async (app, callback) => {
         );
 
         // User related APIs
-        app.get("/users", async (req, res) => await getAllUsers(req, res, users));
+        app.get(
+            "/users",
+            async (req, res) => await getAllUsers(req, res, users)
+        );
         app.get(
             "/users/:email",
             async (req, res) => await getSingleUser(req, res, users)
         );
-        app.post("/users", async (req, res) => await createUser(req, res, users));
+        app.post(
+            "/users",
+            async (req, res) => await createUser(req, res, users)
+        );
         app.put(
             "/users/:email",
             async (req, res) => await updateUser(req, res, users)
@@ -263,7 +288,8 @@ const connectDB = async (app, callback) => {
         );
         app.post(
             "/create-workspace/:creatorEmail",
-            async (req, res) => await createWorkspace(req, res, users, workspaces)
+            async (req, res) =>
+                await createWorkspace(req, res, users, workspaces)
         );
         app.post(
             "/add-member-to-workspace",
@@ -280,18 +306,21 @@ const connectDB = async (app, callback) => {
         );
         app.delete(
             "/deleteWorkspace/:workspaceId/:userEmail",
-            async (req, res) => await deleteWorkspace(req, res, users, workspaces)
+            async (req, res) =>
+                await deleteWorkspace(req, res, users, workspaces)
         );
 
         //Archive tasks APIs
         ///api/search/archived-tasks
         app.get(
             "/api/search/archived-tasks/:userEmail/:query",
-            async (req, res) => await searchArchiveTasks(req, res, archivedTasks)
+            async (req, res) =>
+                await searchArchiveTasks(req, res, archivedTasks)
         );
         app.get(
             "/api/read/archive-tasks",
-            async (req, res) => await getAllArchivedTasks(req, res, archivedTasks)
+            async (req, res) =>
+                await getAllArchivedTasks(req, res, archivedTasks)
         );
         app.post(
             "/api/tasks/archive",
@@ -315,7 +344,8 @@ const connectDB = async (app, callback) => {
         );
         app.post(
             "/api/set-active-workspace-from-filter",
-            async (req, res) => await SetActiveWorkspaceFromFilter(req, res, users)
+            async (req, res) =>
+                await SetActiveWorkspaceFromFilter(req, res, users)
         );
 
         // User Search History
@@ -338,11 +368,13 @@ const connectDB = async (app, callback) => {
         // Users feedback -----------------
         app.get(
             "/api/users-feedback",
-            async (req, res) => await getAllUserFeedback(req, res, feedbackCollection)
+            async (req, res) =>
+                await getAllUserFeedback(req, res, feedbackCollection)
         );
         app.patch(
             "/api/users-feedback/:id",
-            async (req, res) => await replyUserFeedback(req, res, feedbackCollection)
+            async (req, res) =>
+                await replyUserFeedback(req, res, feedbackCollection)
         );
 
         // Number of data
@@ -353,6 +385,10 @@ const connectDB = async (app, callback) => {
         app.get(
             "/api/number-of-workspace",
             async (req, res) => await getTheNumberOfData(req, res, workspaces)
+        );
+        app.get(
+            "/api/number-of-premium-user",
+            async (req, res) => await getTheNumberOfData(req, res, paymentInfo)
         );
 
         // Newsletter related API
@@ -383,10 +419,13 @@ const connectDB = async (app, callback) => {
 
         // Notification Related APIS
 
-        app.get("/api/notifications/:activeWorkspaceId", async (req, res) => getNotifications(req, res, workspaces)
+        app.get("/api/notifications/:activeWorkspaceId", async (req, res) =>
+            getNotifications(req, res, workspaces)
         );
 
-        app.put("/api/updateNotifications/:activeWorkspaceId", async (req, res) => createNotifications(req, res, workspaces)
+        app.put(
+            "/api/updateNotifications/:activeWorkspaceId",
+            async (req, res) => createNotifications(req, res, workspaces)
         );
 
         // Article related API ------------
