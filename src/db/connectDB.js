@@ -451,6 +451,9 @@ const connectDB = async (app, callback) => {
         app.post("/payment/failed/:transId", async (req, res) =>
             paymentFailed(req, res, paymentInfo)
         );
+        app.delete("/paymentInfo/:id", async (req, res) =>
+            deletePaymentInfo(req, res, paymentInfo)
+        );
 
         if (callback) {
             callback();
