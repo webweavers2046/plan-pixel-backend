@@ -110,7 +110,6 @@ const {
     readTaskLabel,
 } = require("../api/controllers/tasksLabel/readTaskLabel");
 
-
 // Express App Initialization
 const connectDB = async (app, callback) => {
     // Required client for the connection
