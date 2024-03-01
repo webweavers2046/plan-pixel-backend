@@ -27,6 +27,7 @@ const {
 const {
     CreateTask,
     createArchiveTasks,
+    createUnArchiveTasks,
 } = require("../api/controllers/tasks/createTask");
 const updateTaskState = require("../api/controllers/tasks/updateTask");
 const deleteTask = require("../api/controllers/tasks/deleteTask");
@@ -325,6 +326,11 @@ const connectDB = async (app, callback) => {
             "/api/tasks/archive",
             async (req, res) =>
                 await createArchiveTasks(req, res, tasks, archivedTasks)
+        );
+        app.post(
+            "/api/tasks/unArchive",
+            async (req, res) =>
+                await createUnArchiveTasks(req, res, tasks, archivedTasks, workspaces, users)
         );
 
         // Filter tasks APIs
