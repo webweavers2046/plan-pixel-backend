@@ -113,6 +113,7 @@ const {
 const {
     readTaskLabel,
 } = require("../api/controllers/tasksLabel/readTaskLabel");
+const { checkLabel } = require("../api/controllers/tasksLabel/checkLabel");
 
 // Express App Initialization
 const connectDB = async (app, callback) => {
@@ -438,6 +439,12 @@ const connectDB = async (app, callback) => {
         app.delete("/api/articles/:id", async (req, res) =>
             deleteArticle(req, res, articleCollection)
         );
+
+
+        // Label related API
+
+        app.put('/create-label/:taskId', async(req, res) => await createTaskLabel(req, res, tasks))
+        app.put('/check-label/:taskId', async(req, res) => await checkLabel(req, res, tasks))
 
         // Payment related API
         app.get(
