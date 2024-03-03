@@ -439,6 +439,11 @@ const connectDB = async (app, callback) => {
             deleteArticle(req, res, articleCollection)
         );
 
+
+        // Label related API
+
+        app.put('/create-label/:taskId', async(req, res) => await createTaskLabel(req, res, tasks))
+
         // Payment related API
         app.get(
             "/paymentInfo",
