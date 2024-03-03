@@ -5,13 +5,13 @@ const checkLabel = async (req, res, tasks) => {
     const taskId = req?.params?.taskId
     const index = req?.body?.index;
     const checked = req?.body?.checked;
-      console.log("card id", taskId);
-      console.log("is checked", checked);
-      console.log("index", index);
+    //   console.log("card id", taskId);
+    //   console.log("is checked", checked);
+    //   console.log("index", index);
     try {
 
         const filter = {_id: new ObjectId(taskId)};
-        const update = { $set: { "labels.$[elem].checked": checked } };
+        const update = { $set: { "labels.$[elem].labelCheck": checked } };
         const options = { arrayFilters: [{ "elem.index": index }] };
 
         const result = await tasks.updateOne(filter,update,options);
