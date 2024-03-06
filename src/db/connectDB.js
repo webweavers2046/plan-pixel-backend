@@ -46,6 +46,7 @@ const {
 const {
     getPaymentInfo,
     deletePaymentInfo,
+    getLastFivePremiumMembers,
 } = require("../api/controllers/payment");
 
 // Workspace Controllers
@@ -468,6 +469,11 @@ const connectDB = async (app, callback) => {
         app.get(
             "/paymentInfo",
             async (req, res) => await getPaymentInfo(req, res, paymentInfo)
+        );
+        app.get(
+            "/last-five-premium-members",
+            async (req, res) =>
+                await getLastFivePremiumMembers(req, res, paymentInfo)
         );
         app.post(
             "/stripePayment",
