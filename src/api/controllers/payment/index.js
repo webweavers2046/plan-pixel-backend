@@ -7,6 +7,19 @@ const getPaymentInfo = async (req, res, tasksCollection) => {
         console.log(error);
     }
 };
+const getLastFivePremiumMembers = async (req, res, paymentInfo) => {
+    try {
+        const premiumMembers = await paymentInfo
+            .find({ paymentStatus: true })
+            .sort({ _id: -1 })
+            .limit(5)
+            .toArray();
+        res.json(premiumMembers);
+    } catch (error) {
+        console.error("Error fetching premium members:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
 
 const deletePaymentInfo = async (req, res, paymentInfo) => {
     try {
@@ -21,4 +34,8 @@ const deletePaymentInfo = async (req, res, paymentInfo) => {
     }
 };
 
-module.exports = { getPaymentInfo, deletePaymentInfo };
+module.exports = {
+    getPaymentInfo,
+    deletePaymentInfo,
+    getLastFivePremiumMembers,
+};
