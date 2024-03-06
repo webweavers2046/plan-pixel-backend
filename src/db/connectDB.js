@@ -46,6 +46,7 @@ const {
 const {
     getPaymentInfo,
     deletePaymentInfo,
+    getLastFivePremiumMembers,
 } = require("../api/controllers/payment");
 
 // Workspace Controllers
@@ -114,6 +115,7 @@ const {
     readTaskLabel,
 } = require("../api/controllers/tasksLabel/readTaskLabel");
 const { checkLabel } = require("../api/controllers/tasksLabel/checkLabel");
+const addUserFeedback = require("../api/controllers/feedbacks/addUserFeedback");
 
 // Express App Initialization
 const connectDB = async (app, callback) => {
@@ -331,7 +333,14 @@ const connectDB = async (app, callback) => {
         app.post(
             "/api/tasks/unArchive",
             async (req, res) =>
-                await createUnArchiveTasks(req, res, tasks, archivedTasks, workspaces, users)
+                await createUnArchiveTasks(
+                    req,
+                    res,
+                    tasks,
+                    archivedTasks,
+                    workspaces,
+                    users
+                )
         );
 
         // Filter tasks APIs
@@ -371,6 +380,11 @@ const connectDB = async (app, callback) => {
             "/api/users-feedback",
             async (req, res) =>
                 await getAllUserFeedback(req, res, feedbackCollection)
+        );
+        app.post(
+            "/api/users-feedback",
+            async (req, res) =>
+                await addUserFeedback(req, res, feedbackCollection)
         );
         app.patch(
             "/api/users-feedback/:id",
@@ -440,16 +454,26 @@ const connectDB = async (app, callback) => {
             deleteArticle(req, res, articleCollection)
         );
 
-
         // Label related API
 
-        app.put('/create-label/:taskId', async(req, res) => await createTaskLabel(req, res, tasks))
-        app.put('/check-label/:taskId', async(req, res) => await checkLabel(req, res, tasks))
+        app.put(
+            "/create-label/:taskId",
+            async (req, res) => await createTaskLabel(req, res, tasks)
+        );
+        app.put(
+            "/check-label/:taskId",
+            async (req, res) => await checkLabel(req, res, tasks)
+        );
 
         // Payment related API
         app.get(
             "/paymentInfo",
             async (req, res) => await getPaymentInfo(req, res, paymentInfo)
+        );
+        app.get(
+            "/last-five-premium-members",
+            async (req, res) =>
+                await getLastFivePremiumMembers(req, res, paymentInfo)
         );
         app.post(
             "/stripePayment",
