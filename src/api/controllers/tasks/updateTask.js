@@ -64,5 +64,10 @@ const updateTaskState = async (req, res, taskCollection) => {
 };
 
 
-module.exports = updateTask;
-module.exports = updateTaskState;
+// module.exports = updateTask;
+// module.exports = updateTaskState;
+
+module.exports = {
+  updateTask,
+  updateTaskState
+};

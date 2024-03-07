@@ -29,7 +29,7 @@ const {
     createArchiveTasks,
     createUnArchiveTasks,
 } = require("../api/controllers/tasks/createTask");
-const updateTaskState = require("../api/controllers/tasks/updateTask");
+const {updateTask, updateTaskState} = require("../api/controllers/tasks/updateTask");
 const deleteTask = require("../api/controllers/tasks/deleteTask");
 
 // Workspace Controllers
@@ -229,6 +229,10 @@ const connectDB = async (app, callback) => {
         app.put(
             "/updateTask/:id",
             async (req, res) => await updateTaskState(req, res, tasks)
+        );
+        app.put(
+            "/tasks/updateTask/:id",
+            async (req, res) => await updateTask(req, res, tasks)
         );
         app.patch(
             "/updateTaskState",
